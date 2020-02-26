@@ -28,3 +28,5 @@ serviceRoutes.route('/:id').delete(function (req, res) {
     });
 
 });
+
+module.exports = serviceRoutes;
