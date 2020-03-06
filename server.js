@@ -7,6 +7,8 @@ mongoose = require('mongoose');
 //api config
 serviceRoutes = require('./server/expressRoutes/serviceRoutes');
 vendorRoutes = require('./server/expressRoutes/vendorRoutes');
+notificationRoutes = require('./server/expressRoutes/notificationRoutes');
+petRoutes = require('./server/expressRoutes/petRoutes');
 
 // connect app to mongoDB
 mongoose.Promise = global.Promise;
@@ -24,6 +26,8 @@ app.use(cors());
 //Mapping Express Route with Server Route
 app.use('/service', serviceRoutes)
 app.use('/vendor',vendorRoutes)
+app.use('/pet',petRoutes)
+app.use('/notification',notificationRoutes)
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
