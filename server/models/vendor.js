@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 // Define collection and schema for Items
 var vendor = new Schema({
-  id: String,
+
   email: String,
   password: String,
   createdAt: { type : Date, default: Date.now },
@@ -12,7 +12,7 @@ var vendor = new Schema({
   rememberToken:String,
   mobile: String,
   name: String,
-  poastalCode: Number,
+  postalCode: Number,
   address: String
 
 },{

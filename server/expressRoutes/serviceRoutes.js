@@ -3,7 +3,7 @@ var serviceRoutes = express.Router();
 var Service = require('../models/service');
 
 // add new service
-serviceRoutes.route('/add').post(function (req, res) {
+serviceRoutes.route('/add').post((req, res) => {
 
     var service = new Service(req.body);
     
@@ -18,7 +18,7 @@ serviceRoutes.route('/add').post(function (req, res) {
 });
 
 // delete service from database
-serviceRoutes.route('/:id').delete(function (req, res) {
+serviceRoutes.route('/:id').delete((req, res) => {
 
     Service.findByIdAndRemove({_id: req.params.id}, function(err, service){
 

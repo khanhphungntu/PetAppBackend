@@ -4,7 +4,7 @@ var Schema = mongoose.Schema;
 
 // Define collection and schema for Items
 var booking = new Schema({
-  id: String,
+  
   petId: String,
   time: { type : Date },
   createdAt: { type : Date, default: Date.now },
