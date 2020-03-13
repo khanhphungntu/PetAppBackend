@@ -6,7 +6,7 @@ const app = express();
 // add new pet
 petRoutes.route('/add').post(function (req, res) {
 
-    var pet = new Pet(req.body);
+    var pet = new Pet(req.body, deletedAt = null);
     
     pet.save()
     .then(item => {
@@ -20,26 +20,27 @@ petRoutes.route('/add').post(function (req, res) {
 
 
 // delete pet from database
-petRoutes.route('/:id').delete(function (req, res) {
+petRoutes.route('/:id').put(function (req, res) {
 
-    Pet.findByIdAndRemove({_id: req.params.id}, function(err, pet){
-
+    Pet.findByIdAndUpdate(req.params.id,{"deletedAt" : Date.now},function(err, pet){
+    
       if(err) res.json(err);
-      else res.json('Successfully removed');
-
+      else{
+        res.json('Successfully removed at'+ Date.now);   
+    }
     });
 
 });
 
 //update pet
-petRoutes.route('/:id').put(function(req,res){
+/*petRoutes.route('/:id').put(function(req,res){
     Pet.findByIdAndUpdate({_id: req.params.id},function(err, pet){
         
         if(err) res.json(err);
         else res.json('Successfully updated');
     })
 
-});
+});*/
 
 
 //read pet
