@@ -6,11 +6,12 @@ var Schema = mongoose.Schema;
 var pet = new Schema({
 
   name: String,
-  dateOfBirth: { type : Date },
+  dateOfBirth: { type : Date, default: Date.now},
   weight: Number,
   height: Number,
   type: String,
-  customerId: String
+  customerId: String,
+  deletedAt: {type : Date, default: null},
 
 },{
   collection: 'pets'

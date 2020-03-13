@@ -8,7 +8,7 @@ mongoose = require('mongoose');
 authRoutes = require('./server/authentication/authentication');
 serviceRoutes = require('./server/expressRoutes/serviceRoutes');
 customerRoutes = require('./server/expressRoutes/customerRoutes');
-
+petRoutes = require('./server/expressRoutes/petRoutes')
 vendorRoutes = require('./server/expressRoutes/vendorRoutes');
 
 // connect app to mongoDB
@@ -31,6 +31,7 @@ app.use('/customer', customerRoutes)
 app.use('/vendorRoutes',vendorRoutes)
 app.use('/api/auth', authRoutes);
 app.use('/api/vendor', vendorRoutes);
+app.use('/api/pet',petRoutes);
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
