@@ -3,34 +3,7 @@ var customerRoutes = express.Router();
 var Customer = require('../models/customer');
 var authSevice = require('../services/auth');
 
-customerRoutes.route('/').post((req, res) => {
-
-    var customer = new Customer(req.body);
-
-    Customer.find({email: customer.email}, (err, data) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        else if(data.length > 0){
-            res.status(400).send("The email has already been used!");
-        }
-        else{
-            authSevice.hashPassword(customer.password, (hashedPasword) => {
-                customer.password = hashedPasword;
-                customer.save()
-                .then(item => {
-                    res.status(200).json({item});
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).send("Unable to save to database");
-                })
-            })
-        }
-    })
-})
-
+// get customer by id
 customerRoutes.route('/:id').get((req, res) => {
     var id = req.params.id;
     Customer.findById(id,  (err, customer) => {
@@ -42,8 +15,16 @@ customerRoutes.route('/:id').get((req, res) => {
     });
 })
 
+//update customer profile except password
 customerRoutes.route('/:id').put((req, res) => {
     var id = req.params.id;
+    var extractedId = req.id;
+
+    if(extractedId != id){
+        res.status(401).send('Unauthorized user');
+        return;
+    }
+
     Customer.findById(id, (err, customer) => {
         
         if (!customer || err) return next(new Error('Could not load Document'));
@@ -68,8 +49,17 @@ customerRoutes.route('/:id').put((req, res) => {
     })
 })
 
+
+//update customer password
 customerRoutes.route('/password/:id').put((req, res) => {
     var id = req.params.id;
+    var extractedId = req.id;
+
+    if(extractedId != id){
+        res.status(401).send('Unauthorized user');
+        return;
+    }
+    
     Customer.findById(id, (err, customer) => {
         
         if (!customer || err) return next(new Error('Could not load Document'));

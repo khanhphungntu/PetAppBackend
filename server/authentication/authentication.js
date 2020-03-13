@@ -16,7 +16,7 @@ authRoutes.route('/login/customer').post(async (req, res) => {
         }
         else{
             var customer = new Customer(customers[0]);
-            authService.comparePassword(customer.password, password, (isMatch) => {
+            authService.comparePassword(password, customer.password, (isMatch) => {
                 if(isMatch){
                     const payload = {
                         id: customer._id,
@@ -52,7 +52,7 @@ authRoutes.route('/login/vendor').post(async (req, res) => {
         }
         else{
             var vendor = new Vendor(vendors[0]);
-            authService.comparePassword(vendor.password, password, (isMatch) => {
+            authService.comparePassword(password, vendor.password, (isMatch) => {
                 if(isMatch){
                     const payload = {
                         id: vendor._id,

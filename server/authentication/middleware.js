@@ -10,10 +10,12 @@ const withAuth = function(req, res, next) {
     if (!token) {
         res.status(401).send('Unauthorized: No token provided');
     } else {
-        jwt.verify(token, secret, function(err, decoded) {
+        jwt.verify(token, secret.key, function(err, decoded) {
         if (err) {
+            console.log(err);
             res.status(401).send('Unauthorized: Invalid token');
         } else {
+            req.id = decoded.id;
             next();
         }
         });

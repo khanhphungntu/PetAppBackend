@@ -3,34 +3,7 @@ var vendorRoutes = express.Router();
 var Vendor = require('../models/vendor');
 var authSevice = require('../services/auth');
 
-vendorRoutes.route('/').post((req, res) => {
-
-    var vendor = new Vendor(req.body);
-
-    Vendor.find({email: vendor.email}, (err, data) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        else if(data.length > 0){
-            res.status(400).send("The email has already been used!");
-        }
-        else{
-            authSevice.hashPassword(vendor.password, (hashedPasword) => {
-                vendor.password = hashedPasword;
-                vendor.save()
-                .then(item => {
-                    res.status(200).json({item});
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).send("Unable to save to database");
-                })
-            })
-        }
-    })
-})
-
+// get vendor by id
 vendorRoutes.route('/:id').get((req, res) => {
     var id = req.params.id;
     Vendor.findById(id,  (err, vendor) => {
@@ -42,8 +15,16 @@ vendorRoutes.route('/:id').get((req, res) => {
     });
 })
 
+// update vendor by id
 vendorRoutes.route('/:id').put((req, res) => {
     var id = req.params.id;
+    var extractedId = req.id;
+
+    if(extractedId != id){
+        res.status(401).send('Unauthorized user');
+        return;
+    }
+
     Vendor.findById(id, (err, vendor) => {
         
         if (!vendor || err) return next(new Error('Could not load Document'));
@@ -68,8 +49,17 @@ vendorRoutes.route('/:id').put((req, res) => {
     })
 })
 
+
+//update vendor password
 vendorRoutes.route('/password/:id').put((req, res) => {
     var id = req.params.id;
+    var extractedId = req.id;
+
+    if(extractedId != id){
+        res.status(401).send('Unauthorized user');
+        return;
+    }
+
     Vendor.findById(id, (err, vendor) => {
         
         if (!vendor || err) return next(new Error('Could not load Document'));

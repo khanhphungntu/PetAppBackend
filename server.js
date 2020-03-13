@@ -2,14 +2,15 @@ const express = require('express'),
 path = require('path'),
 bodyParser = require('body-parser'),
 cors = require('cors'),
-mongoose = require('mongoose');
+mongoose = require('mongoose'),
+withAuth = require('./server/authentication/middleware');
 
 //api config
-authRoutes = require('./server/authentication/authentication');
-serviceRoutes = require('./server/expressRoutes/serviceRoutes');
-customerRoutes = require('./server/expressRoutes/customerRoutes');
-
-vendorRoutes = require('./server/expressRoutes/vendorRoutes');
+const authRoutes = require('./server/authentication/authentication');
+const serviceRoutes = require('./server/expressRoutes/serviceRoutes');
+const customerRoutes = require('./server/expressRoutes/customerRoutes');
+const accountRoutes = require('./server/expressRoutes/accountRoutes');
+const vendorRoutes = require('./server/expressRoutes/vendorRoutes');
 
 // connect app to mongoDB
 mongoose.Promise = global.Promise;
@@ -25,12 +26,12 @@ app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:500
 app.use(cors());
 
 //Mapping Express Route with Server Route
-
-app.use('/service', serviceRoutes)
-app.use('/customer', customerRoutes)
-app.use('/vendorRoutes',vendorRoutes)
+app.use('/api/account', accountRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/vendor', vendorRoutes);
+app.use('/api/service', withAuth, serviceRoutes);
+app.use('/api/customer', withAuth, customerRoutes);
+app.use('/api/vendorRoutes', withAuth, vendorRoutes);
+app.use('/api/vendor', withAuth, vendorRoutes);
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
