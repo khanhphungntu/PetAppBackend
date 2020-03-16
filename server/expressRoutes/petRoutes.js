@@ -20,17 +20,37 @@ petRoutes.route('/add').post(function (req, res) {
 
 
 // delete pet from database
-petRoutes.route('/:id').put(function (req, res) {
+petRoutes.route('/:id').put((req, res)=> {
+    id = req.params.id;
 
-    Pet.findByIdAndUpdate(req.params.id,{"deletedAt" : Date.now},function(err, pet){
+    Pet.findById(id, (err, pet) => {
+        
+        if (!pet || err) return next(new Error('Could not load Document'));
+        else {
+                pet["deletedAt"] = Date.now();
+                pet.save()
+                .then(pet => {
+                    res.json("ok");
+                })
+                .catch(err => {
+                    console.log(err);
+                    res.status(400).send("unable to update the database");
+                });
+            }
+    });
+});
+
+
+    /*Pet.findByIdAndUpdate(req.params.id,{"deletedAt" : Date.now},function(err, pet){
     
       if(err) res.json(err);
       else{
-        res.json('Successfully removed at'+ Date.now);   
+        
+        res.json('Successfully removed');   
     }
-    });
+    });*/
 
-});
+
 
 //update pet
 /*petRoutes.route('/:id').put(function(req,res){
