@@ -27,31 +27,77 @@ petRoutes.route('/:id').delete((req, res)=> {
         
         if (!pet || err) return next(new Error('Could not load Document'));
         else {
-                pet["deletedAt"] = Date.now();
-                pet.save()
-                .then(pet => {
-                    res.json("ok");
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).send("unable to update the database");
-                });
+            if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+                return;
+               }
+            pet["deletedAt"] = Date.now();
+            pet.save()
+            .then(pet => {
+                res.json("Deleted Successfully");
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).send("unable to update the database");
+            });
             }
     });
 });
 
 
 
+
 //read pet
 petRoutes.route('/:id').get(function(req,res){
-    Pet.findById({_id: req.params.id},function(err,pet){
+    var id = req.params.id;
+
+    Pet.findById(id,(err,pet) => {
 
         if(err) res.json(err);
-        else res.json(pet);
-        
+        else{
+            if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+               }
+            else res.json(pet); 
+        }
      })
 
 });
 
+//update pet
+petRoutes.route('/:id').put(function(req,res){
+    var id = req.params.id;
+    var extractedId = req.id;
+
+    Pet.findById(id, (err, pet) => {
+        
+        if (!pet || err) return next(new Error('Could not load Document'));
+        else {
+            if(extractedId != req.body.customerId){
+                res.status(401).send('Unauthorized user');
+                return;
+            }
+            
+            else if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+                return;
+               }
+
+            for ( item of Object.keys(req.body)){
+                pet[item] = req.body[item];
+            }
+
+            pet.save()
+            .then(pet => {
+                res.json("Updated!");
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).send("unable to update the database");
+            });
+        }
+    })
+
+});
 
 module.exports = petRoutes;  
