@@ -19,8 +19,8 @@ petRoutes.route('/add').post(function (req, res) {
 });
 
 
-// delete pet from database
-petRoutes.route('/:id').put((req, res)=> {
+// delete pet from database (soft delete)
+petRoutes.route('/:id').delete((req, res)=> {
     id = req.params.id;
 
     Pet.findById(id, (err, pet) => {
@@ -40,27 +40,6 @@ petRoutes.route('/:id').put((req, res)=> {
     });
 });
 
-
-    /*Pet.findByIdAndUpdate(req.params.id,{"deletedAt" : Date.now},function(err, pet){
-    
-      if(err) res.json(err);
-      else{
-        
-        res.json('Successfully removed');   
-    }
-    });*/
-
-
-
-//update pet
-/*petRoutes.route('/:id').put(function(req,res){
-    Pet.findByIdAndUpdate({_id: req.params.id},function(err, pet){
-        
-        if(err) res.json(err);
-        else res.json('Successfully updated');
-    })
-
-});*/
 
 
 //read pet
