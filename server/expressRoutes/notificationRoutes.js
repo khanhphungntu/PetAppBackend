@@ -31,17 +31,6 @@ notificationRoutes.route('/:id').delete(function (req, res) {
 
 });
 
-//update notification
-notificationRoutes.route('/:id').put(function(req,res){
-    Notification.findByIdAndUpdate({_id: req.params.id},function(err, notification){
-        
-        if(err) res.json(err);
-        else res.json('Successfully updated');
-    })
-
-});
-
-
 //read notification by id
 notificationRoutes.route('/:id').get(function(req,res){
     Notification.findById({_id: req.params.id},function(err,notification){
@@ -90,6 +79,7 @@ notificationRoutes.route('/vendor').get(function(req,res){
         res.json(notification);
     })
 })
+
 //read notification of one pet
 notificationRoutes.route('/pet').get(function(req,res){
     var petId = req.body.id;
