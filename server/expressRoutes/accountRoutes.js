@@ -3,7 +3,7 @@ var accountRoutes = express.Router();
 var Customer = require('../models/customer');
 var Vendor = require('../models/vendor');
 var authSevice = require('../services/auth');
-
+var VendorLocation = require('../models/vendorLocation');
 //create customer account
 accountRoutes.route('/customer').post((req, res) => {
 
@@ -52,7 +52,20 @@ accountRoutes.route('/vendor').post((req, res) => {
                 vendor.password = hashedPasword;
                 vendor.save()
                 .then(item => {
-                    res.status(200).json({item});
+                    VendorLocation.findById(req.body.address, (err,vendorLocation)=> {
+                        if (err) {
+                            console.log(err);
+                            return ;}
+                        vendorLocation['vendorId'] = item._id;
+                        vendorLocation.save().then(
+                            location =>{res.status(200).json(item);}
+                        )
+                        .catch(err =>{
+                            console.log(err);
+                            res.status(400).send("error when saving vendorId in vendorLocation");
+                        })
+                        
+                    })
                 })
                 .catch(err => {
                     console.log(err);
