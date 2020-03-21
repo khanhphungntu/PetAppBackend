@@ -4,7 +4,7 @@ var Service = require('../models/service');
 
 
 // add new service
-serviceRoutes.route('/add').post((req, res) => {
+serviceRoutes.route('').post((req, res) => {
     var extractedId = req.id;
     var service = new Service(req.body);
     
@@ -20,6 +20,8 @@ serviceRoutes.route('/add').post((req, res) => {
     });
 
 });
+
+
 
 // delete service from database
 serviceRoutes.route('/:id').delete((req, res) => {
@@ -52,7 +54,7 @@ serviceRoutes.route('/:id').put((req,res)=>{
     var extractedId = req.id;
 
     Service.findById(id, (err, service)=>{
-        if (!service || err) return res.status(400).send("Could not load documents");
+        if (!service || err) res.status(400).send("Could not load documents");
         else {
             if (extractedId!=req.body.vendorId){
                 res.status(401).send('Unauthorized user');
@@ -81,11 +83,23 @@ serviceRoutes.route('/:id').get((req,res)=>{
     var id = req.params.id;
 
     Service.findById(id, (err, service)=>{
-        if (!service || err) return next(new Error('Could not load document'));
+        if (!service || err)  res.status(400).send('Could not load document');
         else {
-            res.json(service);
+            res.status(200).json(service);
         }
     })
 })
 
+
+// get all services by a vendor
+serviceRoutes.route('').get((req,res)=>{
+    var id = req.id;
+
+    Service.find({vendorId: id}, (err, services)=>{
+        if (!services || err) res.status(400).send('Could not load document');
+        else {
+            res.status(200).json(services);
+        }
+    })
+})
 module.exports = serviceRoutes;
