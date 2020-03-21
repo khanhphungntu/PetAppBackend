@@ -12,6 +12,8 @@ const customerRoutes = require('./server/expressRoutes/customerRoutes');
 const accountRoutes = require('./server/expressRoutes/accountRoutes');
 const vendorRoutes = require('./server/expressRoutes/vendorRoutes');
 const petRoutes = require('./server/expressRoutes/petRoutes');
+const scheduleRoutes = require('./server/expressRoutes/scheduleRoutes');
+const notificationRoutes = require('./server/expressRoutes/notificationRoutes');
 // connect app to mongoDB
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/petApp').then(
@@ -31,7 +33,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/service', withAuth, serviceRoutes);
 app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
-app.use('/api/pet',petRoutes);
+app.use('/api/pet',withAuth, petRoutes);
+app.use('/api/notification',withAuth, notificationRoutes);
+app.use('/api/schedule', scheduleRoutes);
 
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){

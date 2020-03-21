@@ -1,7 +1,6 @@
 var express = require('express');
 var petRoutes = express.Router();
 var Pet = require('../models/pet');
-const app = express();
 
 // add new pet
 petRoutes.route('/add').post(function (req, res) {
