@@ -29,7 +29,7 @@ app.use(cors());
 //Mapping Express Route with Server Route
 app.use('/api/account', accountRoutes);
 app.use('/api/auth', authRoutes);
-app.use('/api/service', withAuth, serviceRoutes);
+app.use('/api/services', withAuth, serviceRoutes);
 app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
 app.use('/api/pet',petRoutes);
