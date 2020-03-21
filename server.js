@@ -12,6 +12,7 @@ const customerRoutes = require('./server/expressRoutes/customerRoutes');
 const accountRoutes = require('./server/expressRoutes/accountRoutes');
 const vendorRoutes = require('./server/expressRoutes/vendorRoutes');
 const petRoutes = require('./server/expressRoutes/petRoutes');
+const allVendorRoutes = require('./server/expressRoutes/viewAllVendors');
 // connect app to mongoDB
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb://localhost:27017/petApp').then(
@@ -32,7 +33,7 @@ app.use('/api/service', withAuth, serviceRoutes);
 app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
 app.use('/api/pet',petRoutes);
-
+app.use('/api/allVendors', allVendorRoutes);
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
