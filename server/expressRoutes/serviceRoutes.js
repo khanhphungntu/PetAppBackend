@@ -54,7 +54,7 @@ serviceRoutes.route('/:id').put((req,res)=>{
     var extractedId = req.id;
 
     Service.findById(id, (err, service)=>{
-        if (!service || err) return res.status(400).send("Could not load documents");
+        if (!service || err) res.status(400).send("Could not load documents");
         else {
             if (extractedId!=req.body.vendorId){
                 res.status(401).send('Unauthorized user');
