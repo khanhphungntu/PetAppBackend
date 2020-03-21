@@ -35,9 +35,19 @@ scheduleRoutes.route('/add').post(function(req,res){
         })
 });
 
+//get booking by id
+scheduleRoutes.get('/:id').get(function(req,res){
+    var id = req.params.id;
+
+    Schedule.findById({_id: id},function(err,unavailableDate){
+        if (err) res.json(err);
+        else res.json(unavailableDate);
+    })
+})
+
 //get booking by vendorID
 scheduleRoutes.get('/').get(function(req,res){
-    var id = req.body.id;
+    var id = req.params.id;
     var extractedId = req.id;
 
     if(extractedId != id){
@@ -45,7 +55,7 @@ scheduleRoutes.get('/').get(function(req,res){
         return;
     }
 
-    Schedule.find({vendorId: vendorId},function(err,schedule){
+    Schedule.findById({vendorId: id},function(err,schedule){
         if (err) res.json(err);
         else res.json(schedule);
     })
@@ -53,24 +63,14 @@ scheduleRoutes.get('/').get(function(req,res){
 
 //delete by id
 scheduleRoutes.route('/:id').delete(function(req,res){
-    var id = req.body.id;
-    var extractedId = req.id;
+    var id = req.params.id;
 
-    if(extractedId != id){
-        res.status(401).send('Unauthorized user');
-        return;
-    }
-
-    if(id.vendorId == extractedId.vendorId){
-        Schedule.findByIdAndRemove(id, function(err,schedule){
+        Schedule.findByIdAndDelete(id, function(err,schedule){
             if (err) res.json(err);
             else res.json('Succesfully removed');
         })
-    }
-    else {
-        res.json('Delete wrong vendor');    
-        return;
-    }
+    
+
 })
 
 
