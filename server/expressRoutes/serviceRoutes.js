@@ -92,8 +92,8 @@ serviceRoutes.route('/:id').get((req,res)=>{
 
 
 // get all services by a vendor
-serviceRoutes.route('').get((req,res)=>{
-    var id = req.id;
+serviceRoutes.route('/vendor/:vendorId').get((req,res)=>{
+    var id = req.params.vendorId;
 
     Service.find({vendorId: id}, (err, services)=>{
         if (!services || err) res.status(400).send('Could not load document');
