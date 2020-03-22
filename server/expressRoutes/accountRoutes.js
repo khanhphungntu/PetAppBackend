@@ -53,7 +53,7 @@ accountRoutes.route('/vendor').post((req, res) => {
                 vendor.save()
                 .then(item => {
                     VendorLocation.findById(req.body.address, (err,vendorLocation)=> {
-                        if (err) {
+                        if (err || !vendorLocation) {
                             console.log(err);
                             return ;}
                         vendorLocation['vendorId'] = item._id;
