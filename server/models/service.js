@@ -7,7 +7,8 @@ var service = new Schema({
 
   name: String,
   vendorId: String,
-  price: Number
+  price: Number,
+  description: String
 
 },{
   collection: 'services'

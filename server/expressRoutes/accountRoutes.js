@@ -22,7 +22,7 @@ accountRoutes.route('/customer').post((req, res) => {
                 customer.password = hashedPasword;
                 customer.save()
                 .then(item => {
-                    res.status(200).json({item});
+                    res.status(200).send("Account is created successfully!");
                 })
                 .catch(err => {
                     console.log(err);
@@ -52,7 +52,7 @@ accountRoutes.route('/vendor').post((req, res) => {
                 vendor.password = hashedPasword;
                 vendor.save()
                 .then(item => {
-                    res.status(200).json({item});
+                    res.status(200).send("Account is created successfully!");
                 })
                 .catch(err => {
                     console.log(err);

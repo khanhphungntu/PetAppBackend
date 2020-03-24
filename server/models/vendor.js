@@ -10,7 +10,7 @@ var vendor = new Schema({
   createdAt: { type : Date, default: Date.now },
   updatedAt: { type : Date},
   rememberToken:String,
-  mobile: String,
+  mobile: Number,
   name: String,
   postalCode: Number,
   address: String
