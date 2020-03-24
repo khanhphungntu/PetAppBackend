@@ -1,6 +1,7 @@
 var express = require('express');
 var bookingRoutes = express.Router();
 var Booking = require('../models/booking');
+var Notification = require('../models/notification');
 
 bookingRoutes.route('/').post((req, res) => {
 
@@ -21,6 +22,17 @@ bookingRoutes.route('/').post((req, res) => {
         console.log(err);
         res.status(400).send("Unable to save to database");
     })
+    //create new notification when a booking is made
+    var notification = new Notification();
+    notification.vendorId = req.body.vendorId;
+    notification.customerId = req.body.customerId;
+    notification.status = 'booked';
+    notification.save()
+    .catch(err => {
+        console.log(err);
+        res.status(400).send("Unable to save to database");
+    })
+
 })
 
 //query booking of one customer

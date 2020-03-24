@@ -1,7 +1,6 @@
 var express = require('express');
 var petRoutes = express.Router();
 var Pet = require('../models/pet');
-const app = express();
 
 // add new pet
 petRoutes.route('/add').post(function (req, res) {
@@ -19,40 +18,85 @@ petRoutes.route('/add').post(function (req, res) {
 });
 
 
-// delete pet from database
-petRoutes.route('/:id').put(function (req, res) {
+// delete pet from database (soft delete)
+petRoutes.route('/:id').delete((req, res)=> {
+    id = req.params.id;
 
-    Pet.findByIdAndUpdate(req.params.id,{"deletedAt" : Date.now},function(err, pet){
-    
-      if(err) res.json(err);
-      else{
-        res.json('Successfully removed at'+ Date.now);   
-    }
+    Pet.findById(id, (err, pet) => {
+        
+        if (!pet || err) return next(new Error('Could not load Document'));
+        else {
+            if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+                return;
+               }
+            pet["deletedAt"] = Date.now();
+            pet.save()
+            .then(pet => {
+                res.json("Deleted Successfully");
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).send("unable to update the database");
+            });
+            }
     });
-
 });
 
-//update pet
-/*petRoutes.route('/:id').put(function(req,res){
-    Pet.findByIdAndUpdate({_id: req.params.id},function(err, pet){
-        
-        if(err) res.json(err);
-        else res.json('Successfully updated');
-    })
 
-});*/
 
 
 //read pet
 petRoutes.route('/:id').get(function(req,res){
-    Pet.findById({_id: req.params.id},function(err,pet){
+    var id = req.params.id;
+
+    Pet.findById(id,(err,pet) => {
 
         if(err) res.json(err);
-        else res.json(pet);
-        
+        else{
+            if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+               }
+            else res.json(pet); 
+        }
      })
 
 });
 
+//update pet
+petRoutes.route('/:id').put(function(req,res){
+    var id = req.params.id;
+    var extractedId = req.id;
+
+    Pet.findById(id, (err, pet) => {
+        
+        if (!pet || err) return next(new Error('Could not load Document'));
+        else {
+            if(extractedId != req.body.customerId){
+                res.status(401).send('Unauthorized user');
+                return;
+            }
+            
+            else if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+                return;
+               }
+
+            for ( item of Object.keys(req.body)){
+                pet[item] = req.body[item];
+            }
+
+            pet.save()
+            .then(pet => {
+                res.json("Updated!");
+            })
+            .catch(err => {
+                console.log(err);
+                res.status(400).send("unable to update the database");
+            });
+        }
+    })
+
+});
 
 module.exports = petRoutes;  
