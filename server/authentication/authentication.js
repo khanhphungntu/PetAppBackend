@@ -5,11 +5,11 @@ const authService = require('../services/auth');
 const crypto = require("crypto");
 const emailjs = require('emailjs-com');
 const fs = require('fs');
+var authSevice = require('../services/auth');
 var Customer = require('../models/customer');
 var Vendor = require('../models/vendor');
 var authRoutes = express.Router();
-
-//const env = fs.readFileSync('../../env.json');
+const nodemailer = require('nodemailer');
 authRoutes.route('/login/customer').post(async (req, res) => {
     const { email, password } = req.body;
 
@@ -102,13 +102,25 @@ authRoutes.route('/password/vendor').post(async (req, res) => {
                     res.status(400).send("Unable to save to database");
                 })
             })
-            var templateParams = {
-                "password": newPwd
-             }
-             
-             var serviceId = "default_service";
-             var templateId = env.emailjs.template;
-             emailjs.send(serviceId, templateId, templateParams, env.emailjs.userId);
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                       user: 'cz2006ntu@gmail.com',
+                       pass: 'helloworld123'
+                   }
+               });
+
+            const mailOptions = {
+                from: 'cz2006ntu@gmail.com', // sender address
+                to: vendor.email, // list of receivers
+                subject: 'Password recovery for Pet App', // Subject line
+                html: '<p>Your new password is: ' + newPwd // plain text body
+            };
+
+            transporter.sendMail(mailOptions, (err, info) => {
+                if(err)
+                  console.log(err)
+             });
         }
     })
     .catch(err => {
@@ -130,6 +142,7 @@ authRoutes.route('/password/customer').post(async (req, res) => {
             var newPwd = crypto.randomBytes(10).toString('hex');
             authSevice.hashPassword(newPwd, (hashedPasword) => {
                 customer.password = hashedPasword;
+
                 customer.save()
                 .then(item => {
                     res.status(200).send("Account is created successfully!");
@@ -139,13 +152,26 @@ authRoutes.route('/password/customer').post(async (req, res) => {
                     res.status(400).send("Unable to save to database");
                 })
             })
-            var templateParams = {
-                "password": newPwd
-             }
-             
-             var serviceId = "default_service";
-             var templateId = env.emailjs.template;
-             emailjs.send(serviceId, templateId, templateParams, env.emailjs.userId);
+
+            var transporter = nodemailer.createTransport({
+                service: 'gmail',
+                auth: {
+                       user: 'cz2006ntu@gmail.com',
+                       pass: 'helloworld123'
+                   }
+               });
+
+            const mailOptions = {
+                from: 'cz2006ntu@gmail.com', // sender address
+                to: vendor.email, // list of receivers
+                subject: 'Password recovery for Pet App', // Subject line
+                html: '<p>Your new password is: ' + newPwd // plain text body
+            };
+
+            transporter.sendMail(mailOptions, (err, info) => {
+                if(err)
+                  console.log(err)
+             });
         }
     })
     .catch(err => {

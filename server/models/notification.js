@@ -9,7 +9,7 @@ var notification = new Schema({
   time: { type : Date, default: Date.now },
   customerId: String,
   vendorId: String,
-  bookingStatus: { type: String, enum: ['cancelled', 'completed', 'booked']},
+  bookingStatus: { type: String, enum: ['cancelled', 'completed', 'booked', 'updated']},
   bookingId: String
 },{
   collection: 'notifications'
