@@ -2,11 +2,12 @@ var express = require('express');
 var bookingRoutes = express.Router();
 var Booking = require('../models/booking');
 var Notification = require('../models/notification');
+var Schedule = require('../models/unavailableDate');
 
+//add new booking
 bookingRoutes.route('/').post((req, res) => {
 
     var booking = new Booking(req.body);
-
     var extractedId = req.id;
 
     if(extractedId != booking.customerId){
@@ -17,22 +18,33 @@ bookingRoutes.route('/').post((req, res) => {
     booking.save()
     .then(item => {
         res.status(200).json({item});
+        //create new notification when a booking is made
+        var notification = new Notification();
+        notification.vendorId = item.vendorId;
+        notification.customerId = item.customerId;
+        notification.bookingStatus = 'booked';
+        notification.bookingId = item._id;
+        notification.save()
+        .catch(err => {
+            console.log(err);
+            res.status(400).send("Unable to save to database");
+        
     })
-    .catch(err => {
-        console.log(err);
-        res.status(400).send("Unable to save to database");
-    })
-    //create new notification when a booking is made
-    var notification = new Notification();
-    notification.vendorId = req.body.vendorId;
-    notification.customerId = req.body.customerId;
-    notification.status = 'booked';
-    notification.save()
     .catch(err => {
         console.log(err);
         res.status(400).send("Unable to save to database");
     })
 
+    //create new unavailable date when booking is made
+    var schedule = new Schedule();
+    schedule.vendorId = item.vendorId;
+    schedule.date = Date.now();
+    schedule.save()
+    .catch(err => {
+        console.log(err);
+        res.status(400).send("Unable to save to database");
+        })
+    })
 })
 
 //query booking of one customer
@@ -103,33 +115,49 @@ bookingRoutes.route('/:id').get((req, res) => {
     });
 })
 
-//update booking
+//update booking (cancel/complete booking)
+//must enter status to set status
 bookingRoutes.route('/:id').put((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;
 
     Booking.findById(id, (err, booking) => {
         
-        if (!booking || err) return next(new Error('Could not load Document'));
+        if (err) return res.json(err);
         else {
-            if(extractedId != req.body.vendorId && extractedId != req.body.customerId){
+            if(extractedId != req.body.id && extractedId != req.body.customerId){
                 res.status(401).send('Unauthorized user');
                 return;
             }
-
+            
             for ( item of Object.keys(req.body)){
+                if(item == "password"){
+                    continue;
+                }
                 booking[item] = req.body[item];
             }
 
             booking.save()
             .then(booking => {
                 res.json("ok");
+                
             })
             .catch(err => {
                 console.log(err);
                 res.status(400).send("unable to update the database");
             });
+            
         }
+        var notification = new Notification();
+        notification.vendorId = req.body.vendorId;
+        notification.customerId = req.body.customerId;
+        notification.bookingStatus = req.body.status;
+        notification.bookingId = id;
+        notification.save()
+        .catch(err => {
+        console.log(err);
+        res.status(400).send("Unable to save to database");
+    })
     })
 })
 
