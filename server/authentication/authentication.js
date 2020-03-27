@@ -163,7 +163,7 @@ authRoutes.route('/password/customer').post(async (req, res) => {
 
             const mailOptions = {
                 from: 'cz2006ntu@gmail.com', // sender address
-                to: vendor.email, // list of receivers
+                to: customer.email, // list of receivers
                 subject: 'Password recovery for Pet App', // Subject line
                 html: '<p>Your new password is: ' + newPwd // plain text body
             };
