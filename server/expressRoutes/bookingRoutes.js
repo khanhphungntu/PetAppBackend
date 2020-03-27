@@ -24,27 +24,29 @@ bookingRoutes.route('/').post((req, res) => {
         notification.customerId = item.customerId;
         notification.bookingStatus = 'booked';
         notification.bookingId = item._id;
+
+        //create new unavailable date when booking is made
+        var schedule = new Schedule();
+        schedule.vendorId = item.vendorId;
+        schedule.date = item.createdAt;
+        schedule.save()
+        .catch(err => {
+        console.log(err);
+        res.status(400).send("Unable to save to database");
+        })
+
         notification.save()
         .catch(err => {
             console.log(err);
             res.status(400).send("Unable to save to database");
-        
+        })
     })
     .catch(err => {
         console.log(err);
         res.status(400).send("Unable to save to database");
     })
 
-    //create new unavailable date when booking is made
-    var schedule = new Schedule();
-    schedule.vendorId = item.vendorId;
-    schedule.date = Date.now();
-    schedule.save()
-    .catch(err => {
-        console.log(err);
-        res.status(400).send("Unable to save to database");
-        })
-    })
+    
 })
 
 //query booking of one customer

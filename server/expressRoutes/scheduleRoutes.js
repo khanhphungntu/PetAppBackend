@@ -1,6 +1,8 @@
 var express = require('express');
 var scheduleRoutes = express.Router();
 var Schedule = require('../models/unavailableDate');
+var Booking = require('../models/booking');
+var Notification = require('../models/notification');
 
 
 //set vendor
@@ -23,6 +25,23 @@ scheduleRoutes.route('/add').post(function(req,res){
                         if (result == true){
                             //same vendor same date
                             res.json("Date is already booked!");
+
+                            //cancel booking
+                            Booking.findOne({vendorId : schedule.vendorId}, function(err,booking){
+                                
+                                booking.status = "cancelled";
+                                booking.save();
+                                var notification = new Notification();
+                                notification.vendorId = booking.vendorId;
+                                notification.customerId = booking.customerId;
+                                notification.bookingStatus = "cancelled";
+                                notification.bookingId = booking.id;
+                                notification.save()
+                                .catch(err => {
+                                console.log(err);
+                                res.status(400).send("Unable to save to database");
+                                })
+                            })
                             return;
                             }
                         else{
