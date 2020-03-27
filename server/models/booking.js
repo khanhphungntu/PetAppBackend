@@ -11,7 +11,7 @@ var booking = new Schema({
   updatedAt: { type : Date},
   serviceId: String,
   vendorId: String,
-  status: { type: String, enum: ['cancelled', 'completed', 'booked']},
+  status: { type: String, enum: ['cancelled', 'completed', 'booked'],default : "booked"},
   customerId: String
 
 },{
