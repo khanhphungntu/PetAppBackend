@@ -83,7 +83,7 @@ scheduleRoutes.get('/:id').get(function(req,res){
 })
 
 //get booking by vendorID
-scheduleRoutes.get('/').get(function(req,res){
+scheduleRoutes.get('/vendor/:id').get(function(req,res){
     var id = req.params.id;
     var extractedId = req.id;
 

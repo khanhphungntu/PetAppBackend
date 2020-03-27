@@ -50,7 +50,7 @@ bookingRoutes.route('/').post((req, res) => {
 })
 
 //query booking of one customer
-bookingRoutes.route('/customer').get((req, res) => {
+bookingRoutes.route('/customer/:id').get((req, res) => {
     var customerId = req.body.customerId;
     var extractedId = req.id;
 
@@ -59,7 +59,7 @@ bookingRoutes.route('/customer').get((req, res) => {
         return;
     }
 
-    Booking.find({customerId: customerId},  (err, bookings) => {
+    Booking.find({customerId: req.params.id},  (err, bookings) => {
         if(err){
             console.log(err);
             res.status(400).send("An error occurs!");
@@ -69,7 +69,7 @@ bookingRoutes.route('/customer').get((req, res) => {
 })
 
 //query booking of one vendor
-bookingRoutes.route('/vendor').get((req, res) => {
+bookingRoutes.route('/vendor/:id').get((req, res) => {
     var vendorId = req.body.vendorId;
     var extractedId = req.id;
 
@@ -78,7 +78,7 @@ bookingRoutes.route('/vendor').get((req, res) => {
         return;
     }
     
-    Booking.find({vendorId: vendorId},  (err, bookings) => {
+    Booking.find({vendorId: req.params.id},  (err, bookings) => {
         if(err){
             console.log(err);
             res.status(400).send("An error occurs!");
@@ -88,9 +88,9 @@ bookingRoutes.route('/vendor').get((req, res) => {
 })
 
 //query booking of one pet
-bookingRoutes.route('/pet').get((req, res) => {
+bookingRoutes.route('/pet/:id').get((req, res) => {
     var petId = req.body.petId;
-    Booking.find({petId: petId},  (err, bookings) => {
+    Booking.find({petId: req.params.id},  (err, bookings) => {
         if(err){
             console.log(err);
             res.status(400).send("An error occurs!");
