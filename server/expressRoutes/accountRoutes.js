@@ -36,7 +36,7 @@ accountRoutes.route('/customer').post((req, res) => {
 
 //create vendor account
 accountRoutes.route('/vendor').post((req, res) => {
-
+    console.log(123);
     var vendor = new Vendor(req.body);
 
     Vendor.find({email: vendor.email}, (err, data) => {

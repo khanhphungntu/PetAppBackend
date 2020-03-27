@@ -4,7 +4,7 @@ bodyParser = require('body-parser'),
 cors = require('cors'),
 mongoose = require('mongoose'),
 withAuth = require('./server/authentication/middleware');
-
+require('dotenv').config()
 //api config
 const authRoutes = require('./server/authentication/authentication');
 const serviceRoutes = require('./server/expressRoutes/serviceRoutes');
@@ -17,9 +17,9 @@ const notificationRoutes = require('./server/expressRoutes/notificationRoutes');
 const vendorLocationRoutes = require('./server/expressRoutes/vendorLocationRoutes');
 const bookingRoutes = require('./server/expressRoutes/bookingRoutes');
 
-// connect app to mongoDB
+//connect app to mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/petApp').then(
+mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?retryWrites=true&w=majority').then(
   () => {console.log('Database is connected') },
   err => { console.log('Can not connect to the database'+ err)}
 );
