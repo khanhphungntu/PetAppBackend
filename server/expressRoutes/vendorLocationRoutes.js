@@ -4,7 +4,8 @@ var vendorLocation = require('../models/vendorLocation');
 
 //get all Vendor Locations
 vendorLocationRoutes.route("").get( (req,res)=>{
-    vendorLocation.find((err,data)=>{
+    vendorLocation.find().sort({name:1}).then((data)=>{
+
         res.status(200).json(data);
     });
 })
