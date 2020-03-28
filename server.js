@@ -40,7 +40,7 @@ app.use('/api/pet',withAuth, petRoutes);
 app.use('/api/notification', notificationRoutes);
 app.use('/api/schedule', scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
-app.use('/api/booking',bookingRoutes);
+app.use('/api/booking',withAuth,bookingRoutes);
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);

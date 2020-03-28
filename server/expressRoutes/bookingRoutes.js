@@ -11,6 +11,8 @@ bookingRoutes.route('/').post((req, res) => {
     var extractedId = req.id;
 
     if(extractedId != booking.customerId){
+        console.log(extractedId);
+        console.log(booking.customerId)
         res.status(401).send('Unauthorized user');
         return;
     }
