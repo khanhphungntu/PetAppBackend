@@ -1,5 +1,4 @@
 name,type,address,postal_code,tel_office_1,tel_office_2,fax_office,latitude,longitude
-Singapore Turf Club Equine Hospital,Hospital,1 Turf Club Avenue Singapore Racecourse,738078,68791000,na,68791010,1.4227387,103.763064
 AAVC - Animal & Avian Veterinary Clinic,Clinic,716 Yishun Street 71 #01-254,760716,68539397,na,68533949,1.426162,103.827477
 Acacia Veterinary Clinic,Clinic,338 Ang Mo Kio Avenue 1 #01-1671,560338,64816889,na,na,1.363639,103.8487619
 Allpets & Aqualife Vets Pte Ltd ,Clinic,24 Jalan Kelulut,809041,64813700,na,64816990,1.3833712,103.8756945
@@ -51,14 +50,15 @@ Point Veterinary Surgery,Clinic,541 Jurong West Avenue 1 #01-1044,640541,6425677
 Point Veterinary Surgery (Telok Blangah),Clinic,38 Telok Blangah Rise #01-339,90038,62741677,na,62742177,1.272278,103.822093
 Queen's Veterinary Surgery (Queen's Vets),Clinic,3 Queen's Road #02-155,260003,64750038,na,64750262,1.3228663,103.8116414
 Republic Veterinary Clinic Pte Ltd,Clinic,1 Jurong West Central 2 #01-17A,648886,67908748,na,na,1.3397443,103.7067297
+Singapore Turf Club Equine Hospital,Hospital,1 Turf Club Avenue Singapore Racecourse,738078,68791000,na,68791010,1.4227387,103.763064
 Singapore Veterinary Animal Clinic,Clinic,768 Woodlands Avenue 6 #01-11,730768,63650308,na,63620602,1.4456471,103.7981398
 Singapore Veterinary Animal Clinic (Jurong East),Clinic,353 Jurong East Street 31 #01-105,600353,68970180,na,68975180,1.3444416,103.7305931
 Society for the Prevention of Cruelty to Animals (SPCA),Clinic,50 Sungei Tengah Road,699012,62875355,na,63824162,1.3807479,103.7314553
 Spring Veterinary Care,Clinic,123 Hougang Avenue 1 #01-1412,530123,62863313,na,62800160,1.3533485,103.8861709
 Stars Veterinary Clinic Pte Ltd,Clinic,211 Hougang Street 21 #01-301,530211,64524576,na,na,1.3596816,103.8876565
+The Animal Clinic Pte Ltd (Katong),Clinic,"55 Lorong L, Telok Kurau #01-63",425500,64404767,na,64401812,1.3117835,103.9106095
 The Animal Clinic Pte Ltd 1,Clinic,109 Clementi Street 11 #01-19,120109,67744464,67746626,67735003,1.3222301,103.7705903
 The Animal Clinic Pte Ltd 2,Clinic,109 Clementi Street 11 #01-31,120109,67770273,na,67746950,1.3222301,103.7705903
-The Animal Clinic Pte Ltd (Katong),Clinic,"55 Lorong L, Telok Kurau #01-63",425500,64404767,na,64401812,1.3117835,103.9106095
 The Animal Doctors Pte Ltd,Clinic,108 Ang Mo Kio Avenue 4 #01-94/96,560108,64514531,na,64517531,1.3710797,103.8385007
 The Cat Clinic,Clinic,109 Clementi Street 11 #01-33,120109,68730014,68735550,na,1.3222301,103.7705903
 The Joyous Vet Pte Ltd 1,Clinic,475 Choa Chu Kang Ave 3 #01-30A Sunshine Place,680475,67690304,na,67697353,1.3779729,103.7391755
