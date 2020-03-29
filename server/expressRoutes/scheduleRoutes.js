@@ -92,7 +92,7 @@ scheduleRoutes.route('/vendor/:id').get(function(req,res){
         return;
     }
 
-    Schedule.find({vendorId: id},function(err,schedule){
+    Schedule.find({vendorId: id}).lean().exec(function(err, schedule){
         if (err) res.json(err);
         else res.json(schedule);
     })
