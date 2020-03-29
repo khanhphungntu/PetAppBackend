@@ -61,7 +61,7 @@ bookingRoutes.route('/customer/:id').get((req, res) => {
 
 //query booking of one vendor
 bookingRoutes.route('/vendor/:id').get((req, res) => {
-    var vendorId = req.body.vendorId;
+    var vendorId = req.params.id;
     var extractedId = req.id;
 
     if(extractedId != vendorId){

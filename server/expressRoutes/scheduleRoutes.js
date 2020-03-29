@@ -72,6 +72,13 @@ scheduleRoutes.route('/add').post(function(req,res){
     })
 });
     
+scheduleRoutes.route('/tmp').post((req, res) => {
+    var schedule = new Schedule(req.body);
+    schedule.save()
+    .then(item => {
+        res.json('ok')
+    })
+})
 //get unavailable dates by id
 scheduleRoutes.route('/:id').get(function(req,res){
     var id = req.params.id;
@@ -92,7 +99,7 @@ scheduleRoutes.route('/vendor/:id').get(function(req,res){
         return;
     }
 
-    Schedule.find({vendorId: id}).lean().exec(function(err, schedule){
+    Schedule.find({vendorId: id},function(err,schedule){
         if (err) res.json(err);
         else res.json(schedule);
     })
