@@ -38,7 +38,7 @@ app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
 app.use('/api/pet',withAuth, petRoutes);
 app.use('/api/notification', notificationRoutes);
-app.use('/api/schedule', scheduleRoutes);
+app.use('/api/schedule', withAuth, scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
 const port = process.env.PORT || 4000;
