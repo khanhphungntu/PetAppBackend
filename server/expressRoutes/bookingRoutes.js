@@ -94,12 +94,7 @@ bookingRoutes.route('/pet/:id').get((req, res) => {
 bookingRoutes.route('/:id').get((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;
-    console.log(extractedId);
-    console.log(req.body.vendorId);
-    if(extractedId != req.body.vendorId && extractedId != req.body.customerId){
-        res.status(401).send('Unauthorized user');
-        return;
-    }
+
     Booking.findById(id,  (err, booking) => {
         if(err){
             console.log(err);
