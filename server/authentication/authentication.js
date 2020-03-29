@@ -31,7 +31,8 @@ authRoutes.route('/login/customer').post(async (req, res) => {
                     });
 
                     res.status(200).json({
-                        token: token
+                        token: token,
+                        id: customer._id
                     })
                 }
                 else{
@@ -65,7 +66,8 @@ authRoutes.route('/login/vendor').post(async (req, res) => {
                     const token = jwt.sign(payload, secret.key);
 
                     res.status(200).json({
-                        token: token
+                        token: token,
+                        id: vendor._id
                     })
                 }
                 else{
