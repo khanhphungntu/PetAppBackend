@@ -114,7 +114,7 @@ bookingRoutes.route('/:id').put((req, res) => {
         
         if (err) return res.json(err);
         else {
-            if(extractedId != req.body.id && extractedId != req.body.customerId){
+            if(extractedId != req.body.vendorId && extractedId != req.body.customerId){
                 res.status(401).send('Unauthorized user');
                 return;
             }
