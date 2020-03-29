@@ -72,7 +72,7 @@ scheduleRoutes.route('/add').post(function(req,res){
     })
 });
     
-//get booking by id
+//get unavailable dates by id
 scheduleRoutes.get('/:id').get(function(req,res){
     var id = req.params.id;
 
@@ -82,7 +82,7 @@ scheduleRoutes.get('/:id').get(function(req,res){
     })
 })
 
-//get booking by vendorID
+//get unavailable dates by vendorID
 scheduleRoutes.get('/vendor/:id').get(function(req,res){
     var id = req.params.id;
     var extractedId = req.id;
@@ -92,7 +92,7 @@ scheduleRoutes.get('/vendor/:id').get(function(req,res){
         return;
     }
 
-    Schedule.findById({vendorId: id},function(err,schedule){
+    Schedule.find({vendorId: id},function(err,schedule){
         if (err) res.json(err);
         else res.json(schedule);
     })
