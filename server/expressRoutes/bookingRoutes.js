@@ -128,7 +128,19 @@ bookingRoutes.route('/:id').put((req, res) => {
 
             booking.save()
             .then(booking => {
-                res.json("ok");
+                var notification = new Notification();
+                notification.vendorId = req.body.vendorId;
+                notification.customerId = req.body.customerId;
+                notification.bookingStatus = req.body.status;
+                notification.bookingId = id;
+                notification.save()
+                    .then( () => {
+                        res.json("ok");
+                    })
+                    .catch(err => {
+                        console.log(err);
+                        res.status(400).send("Unable to save to database");
+                    })
                 
             })
             .catch(err => {
@@ -137,16 +149,7 @@ bookingRoutes.route('/:id').put((req, res) => {
             });
             
         }
-        var notification = new Notification();
-        notification.vendorId = req.body.vendorId;
-        notification.customerId = req.body.customerId;
-        notification.bookingStatus = req.body.status;
-        notification.bookingId = id;
-        notification.save()
-        .catch(err => {
-        console.log(err);
-        res.status(400).send("Unable to save to database");
-    })
+
     })
 })
 
