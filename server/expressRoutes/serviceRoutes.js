@@ -8,11 +8,13 @@ serviceRoutes.route('').post((req, res) => {
     var extractedId = req.id;
     var service = new Service(req.body);
     
+    console.log(service.vendorId);
+    console.log(extractedId);
     if (service.vendorId != extractedId){
         res.status(401).send("Unauthorized user");
         return;
     }
-    
+
     service.save()
     .then(item => {
         res.status(200).json({item});
