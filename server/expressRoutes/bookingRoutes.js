@@ -42,7 +42,7 @@ bookingRoutes.route('/').post((req, res) => {
 
 //query booking of one customer
 bookingRoutes.route('/customer/:id').get((req, res) => {
-    var customerId = req.body.customerId;
+    var customerId = req.params.id;
     var extractedId = req.id;
 
     if(extractedId != customerId){
@@ -80,7 +80,6 @@ bookingRoutes.route('/vendor/:id').get((req, res) => {
 
 //query booking of one pet
 bookingRoutes.route('/pet/:id').get((req, res) => {
-    var petId = req.body.petId;
     Booking.find({petId: req.params.id},  (err, bookings) => {
         if(err){
             console.log(err);
