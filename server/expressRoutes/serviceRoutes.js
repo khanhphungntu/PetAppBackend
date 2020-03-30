@@ -6,15 +6,13 @@ var Vendor = require('../models/vendor')
 // add new service
 serviceRoutes.route('').post((req, res) => {
     var extractedId = req.id;
-    //check if the one who posts is a vendor
-    Vendor.findById(extractedId,(err,res)=>{
-        if (err || !res) res.status(401).send("Unauthorized user 1");
-    })
     var service = new Service(req.body);
     
-    if (service.vendorId!==extractedId){
+    if (service.vendorId != extractedId){
         res.status(401).send("Unauthorized user");
-        return;}
+        return;
+    }
+    
     service.save()
     .then(item => {
         res.status(200).json({item});
