@@ -25,7 +25,7 @@ notificationRoutes.route('/:id').delete(function (req, res) {
     Notification.findByIdAndRemove({_id: req.params.id}, function(err, notification){
 
       if(err) res.json(err);
-      else res.json('Successfully removed');
+      else res.status(200).json('Successfully removed');
 
     });
 
@@ -71,7 +71,7 @@ notificationRoutes.route('/vendor/:id').get(function(req,res){
             console.log(err);
             res.send.json('An error occurs!');
         }
-        res.json(notification);
+        res.status(200).json(notification);
     })
 })
 
@@ -90,7 +90,7 @@ notificationRoutes.route('/pet/:id').get(function(req,res){
             console.log(err);
             res.send.json('An error occurs!');
         }
-        res.json(notification);
+        res.status(200).json(notification);
     })
 })
 //read notification by id
@@ -98,7 +98,7 @@ notificationRoutes.route('/:id').get(function(req,res){
     Notification.findById({_id: req.params.id},function(err,notification){
 
         if(err) res.json(err);
-        else res.json(notification);
+        else res.status(200).json(notification);
         
      })
 

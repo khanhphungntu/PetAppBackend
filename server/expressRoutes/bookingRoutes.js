@@ -134,7 +134,7 @@ bookingRoutes.route('/:id').put((req, res) => {
                 notification.bookingId = id;
                 notification.save()
                     .then( () => {
-                        res.json("ok");
+                        res.status(200).json("ok");
                     })
                     .catch(err => {
                         console.log(err);

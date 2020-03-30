@@ -33,7 +33,7 @@ petRoutes.route('/:id').delete((req, res)=> {
             pet["deletedAt"] = Date.now();
             pet.save()
             .then(pet => {
-                res.json("Deleted Successfully");
+                res.status(200).json("Deleted Successfully");
             })
             .catch(err => {
                 console.log(err);
@@ -57,7 +57,7 @@ petRoutes.route('/:id').get(function(req,res){
             if (pet.deletedAt != null){
                 res.json("Pet is already deleted!");
                }
-            else res.json(pet); 
+            else res.status(200).json(pet); 
         }
      })
 
@@ -88,7 +88,7 @@ petRoutes.route('/:id').put(function(req,res){
 
             pet.save()
             .then(pet => {
-                res.json("Updated!");
+                res.status(200).json("Updated!");
             })
             .catch(err => {
                 console.log(err);
