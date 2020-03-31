@@ -73,6 +73,7 @@ petRoutes.route('/customer/:id').get(function(req,res){
         else{
             if (pet.deletedAt != null){
                 res.json("Pet is already deleted!");
+                return;
                }
             else res.json(pet); 
         }
