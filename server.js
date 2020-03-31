@@ -17,10 +17,10 @@ const scheduleRoutes = require('./server/expressRoutes/scheduleRoutes');
 const notificationRoutes = require('./server/expressRoutes/notificationRoutes');
 const vendorLocationRoutes = require('./server/expressRoutes/vendorLocationRoutes');
 const bookingRoutes = require('./server/expressRoutes/bookingRoutes');
-
+const serviceNotificationRoutes = require('./server/notification/serviceNotificationRoutes');
 //connect app to mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?retryWrites=true&w=majority').then(
+mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true').then(
   () => {console.log('Database is connected') },
   err => { console.log('Can not connect to the database'+ err)}
 );
@@ -44,7 +44,11 @@ app.use('/api/notification',withAuth, notificationRoutes);
 app.use('/api/schedule', withAuth, scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
+app.use('/api/serviceNotification', withAuth, serviceNotificationRoutes);
+
+const noti = require('./server/services/notification');
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
+    noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])
 });
