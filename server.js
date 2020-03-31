@@ -39,7 +39,7 @@ app.use('/api/services', withAuth, serviceRoutes);
 app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
 app.use('/api/pet',withAuth, petRoutes);
-app.use('/api/notification',withAuth, jsonParser, notificationRoutes);
+app.use('/api/notification',withAuth, notificationRoutes);
 app.use('/api/schedule', withAuth, scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
