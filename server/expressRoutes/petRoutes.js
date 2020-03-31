@@ -63,6 +63,23 @@ petRoutes.route('/:id').get(function(req,res){
 
 });
 
+//get pet by customerid
+petRoutes.route('/customer/:id').get(function(req,res){
+    var id = req.params.id;
+
+    Pet.find({customerId : id},(err,pet) => {
+
+        if(err) res.json(err);
+        else{
+            if (pet.deletedAt != null){
+                res.json("Pet is already deleted!");
+               }
+            else res.json(pet); 
+        }
+     })
+
+});
+
 //update pet
 petRoutes.route('/:id').put(function(req,res){
     var id = req.params.id;
