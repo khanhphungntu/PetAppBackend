@@ -46,7 +46,7 @@ notificationRoutes.route('/customer/:id').get(function(req,res){
         return;
     }
 
-    Notification.find({customerId:customerId}, function(err, notification){
+    Notification.find({customerId:customerId}).sort({createdAt:-1}).limit(20).exec( function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
@@ -66,7 +66,7 @@ notificationRoutes.route('/vendor/:id').get(function(req,res){
         return;
     }
 
-    Notification.find(vendorId, function(err, notification){
+    Notification.find({vendorId:vendorId}).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
@@ -85,7 +85,7 @@ notificationRoutes.route('/pet/:id').get(function(req,res){
         return;
     }
 
-    Notification.find(petId, function(err, notification){
+    Notification.find(petId).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
