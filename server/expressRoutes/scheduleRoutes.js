@@ -15,11 +15,12 @@ scheduleRoutes.route('/add').post(function (req, res) {
             res.send(err);
         }
         else {
-            if (result == true) {
+            if (result == false) {
                 //same vendor same date
                 //res.json("Date is already blocked!");
                 //cancel booking when date is blocked
-                Booking.findOne({ vendorId: vendorId }, function (err, booking) {
+                
+                Booking.find({ vendorId: vendorId,  }, function (err, booking) {
                     if (booking == null) {
                         res.json(err);
                         return;

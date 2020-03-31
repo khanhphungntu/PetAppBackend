@@ -10,7 +10,7 @@ var vendorLocation = new Schema(
     address:String,
     postal_code: Number,
     tel_office_1:Number,
-    tel_office_2: Number,
+    tel_office_2:Number,
     fax_office: String,
     vendorId: String,
     },{

@@ -56,7 +56,6 @@ accountRoutes.route('/vendor').post((req, res) => {
                             console.log(err);
                             return ;}
                         vendorLocation['vendorId'] = item._id;
-                        console.log(vendorLocation)
                         vendorLocation.save().then(
                             location =>{res.status(200).json(item);}
                         )
