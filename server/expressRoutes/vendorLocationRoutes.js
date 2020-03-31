@@ -20,6 +20,7 @@ vendorLocationRoutes.route("/:name").get((req,res)=>{
 //get vendor Location by Id
 vendorLocationRoutes.route("/vendor/:id").get((req,res)=>{
     VendorLocation.find({vendorId: req.params.id},(err,data)=>{
+
         if(!err)res.status(200).json(data);
         else res.status(400).json("Error when finding vendor Location by Id")
     })
