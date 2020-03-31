@@ -71,7 +71,7 @@ serviceRoutes.route('/:id').put((req,res)=>{
 
             service.save()
             .then(service =>{
-                res.json("ok");
+                res.status(200).json("ok");
             })
             .catch(err =>{
                 console.log(err);

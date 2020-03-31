@@ -39,7 +39,7 @@ customerRoutes.route('/:id').put((req, res) => {
 
             customer.save()
             .then(customer => {
-                res.json("ok");
+                res.status(200).json("ok");
             })
             .catch(err => {
                 console.log(err);
@@ -68,7 +68,7 @@ customerRoutes.route('/password/:id').put((req, res) => {
                 customer["password"] = hashedPassword;
                 customer.save()
                 .then(customer => {
-                    res.json("ok");
+                    res.status(200).json("ok");
                 })
                 .catch(err => {
                     console.log(err);

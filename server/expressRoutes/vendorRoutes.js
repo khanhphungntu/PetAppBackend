@@ -39,7 +39,7 @@ vendorRoutes.route('/:id').put((req, res) => {
 
             vendor.save()
             .then(vendor => {
-                res.json("ok");
+                res.status(200).json("ok");
             })
             .catch(err => {
                 console.log(err);
@@ -68,7 +68,7 @@ vendorRoutes.route('/password/:id').put((req, res) => {
                 vendor["password"] = hashedPassword;
                 vendor.save()
                 .then(vendor => {
-                    res.json("ok");
+                    res.status(200).json("ok");
                 })
                 .catch(err => {
                     console.log(err);

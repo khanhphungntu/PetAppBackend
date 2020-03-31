@@ -55,7 +55,7 @@ scheduleRoutes.route('/tmp').post((req, res) => {
     var schedule = new Schedule(req.body);
     schedule.save()
         .then(item => {
-            res.json('ok')
+            res.status(200).json('ok')
         })
 })
 //get unavailable dates by id
@@ -64,7 +64,7 @@ scheduleRoutes.route('/:id').get(function (req, res) {
 
     Schedule.findById({ _id: id }, function (err, unavailableDate) {
         if (err) res.json(err);
-        else res.json(unavailableDate);
+        else res.status(200).json(unavailableDate);
     })
 })
 
@@ -80,7 +80,7 @@ scheduleRoutes.route('/vendor/:id').get(function (req, res) {
 
     Schedule.find({ vendorId: id }, function (err, schedule) {
         if (err) res.json(err);
-        else res.json(schedule);
+        else res.status(200).json(schedule);
     })
 })
 
@@ -90,7 +90,7 @@ scheduleRoutes.route('/:id').delete(function (req, res) {
 
     Schedule.findByIdAndDelete(id, function (err, schedule) {
         if (err) res.json(err);
-        else res.json('Succesfully removed');
+        else res.status(200).json('Succesfully removed');
     })
 
 
