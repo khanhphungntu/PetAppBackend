@@ -16,4 +16,11 @@ vendorLocationRoutes.route("/:name").get((req,res)=>{
         res.status(200).json(data);
     })
 })
+
+vendorLocationRoutes.route("/:id").get((req,res)=>{
+    vendorLocation.findById(req.params.id,(err,data)=>{
+        res.status(200).json(data);
+    })
+})
+
 module.exports = vendorLocationRoutes
