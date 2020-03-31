@@ -20,7 +20,7 @@ const bookingRoutes = require('./server/expressRoutes/bookingRoutes');
 const serviceNotificationRoutes = require('./server/notification/serviceNotificationRoutes');
 //connect app to mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb://localhost:27017/petApp').then(
+mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true').then(
   () => {console.log('Database is connected') },
   err => { console.log('Can not connect to the database'+ err)}
 );
