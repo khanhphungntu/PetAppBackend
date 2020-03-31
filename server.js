@@ -1,6 +1,7 @@
 const express = require('express'),
 path = require('path'),
 bodyParser = require('body-parser'),
+jsonParser = bodyParser.json(),
 cors = require('cors'),
 mongoose = require('mongoose'),
 withAuth = require('./server/authentication/middleware');
@@ -27,6 +28,7 @@ mongoose.connect('mongodb://localhost:27017/petApp').then(
 // CORS handle
 const app = express();
 app.use(bodyParser.json({limit: "50mb"}));
+app.use(jsonParser)
 app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 app.use(cors());
 
@@ -37,7 +39,8 @@ app.use('/api/services', withAuth, serviceRoutes);
 app.use('/api/customer', withAuth, customerRoutes);
 app.use('/api/vendor', withAuth, vendorRoutes);
 app.use('/api/pet',withAuth, petRoutes);
-app.use('/api/notification', notificationRoutes);
+app.use('/api/notification',withAuth, notificationRoutes);
+
 app.use('/api/schedule', withAuth, scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);

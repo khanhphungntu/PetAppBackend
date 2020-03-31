@@ -25,45 +25,40 @@ notificationRoutes.route('/:id').delete(function (req, res) {
     Notification.findByIdAndRemove({_id: req.params.id}, function(err, notification){
 
       if(err) res.json(err);
-      else res.json('Successfully removed');
+      else res.status(200).json('Successfully removed');
 
     });
 
 });
 
-//read notification by id
-notificationRoutes.route('/:id').get(function(req,res){
-    Notification.findById({_id: req.params.id},function(err,notification){
 
-        if(err) res.json(err);
-        else res.json(notification);
-        
-     })
-
-});
 
 //read notification of one customer
-notificationRoutes.route('/customer').get(function(req,res){
-    var customerId = req.body.id;
-    var extractedId = req.id;
+notificationRoutes.route('/customer/:id').get(function(req,res){
+    var customerId = req.params.id;
 
+    console.log("customerId: "+customerId)
+    var extractedId = req.id;
+    console.log("extractedId: "+extractedId)
+    console.log("aaaa")
     if(extractedId != customerId){
-        res.status(401).send('Unauthorized user');
+        res.status(410).send('Unauthorized user');
         return;
     }
 
-    Notification.find(customerId, function(err, notification){
+    Notification.find({customerId:customerId}).sort({createdAt:-1}).limit(20).exec( function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
         }
-        res.json(notification);
+        console.log(notification)
+        res.status(200).json(notification);
     })
 })
 
 //read notification of one vendor
-notificationRoutes.route('/vendor').get(function(req,res){
-    var vendorId = req.body.id;
+notificationRoutes.route('/vendor/:id').get(function(req,res){
+    var vendorId = req.params.id;
     var extractedId = req.id;
 
     if(extractedId != vendorId){
@@ -71,18 +66,18 @@ notificationRoutes.route('/vendor').get(function(req,res){
         return;
     }
 
-    Notification.find(vendorId, function(err, notification){
+    Notification.find({vendorId:vendorId}).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
         }
-        res.json(notification);
+        res.status(200).json(notification);
     })
 })
 
 //read notification of one pet
-notificationRoutes.route('/pet').get(function(req,res){
-    var petId = req.body.id;
+notificationRoutes.route('/pet/:id').get(function(req,res){
+    var petId = req.params.id;
     var extractedId = req.id;
 
     if(extractedId != petId){
@@ -90,13 +85,22 @@ notificationRoutes.route('/pet').get(function(req,res){
         return;
     }
 
-    Notification.find(petId, function(err, notification){
+    Notification.find(petId).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
         if (err) {
             console.log(err);
             res.send.json('An error occurs!');
         }
-        res.json(notification);
+        res.status(200).json(notification);
     })
 })
+//read notification by id
+notificationRoutes.route('/:id').get(function(req,res){
+    Notification.findById({_id: req.params.id},function(err,notification){
 
+        if(err) res.json(err);
+        else res.status(200).json(notification);
+        
+     })
+
+});
 module.exports = notificationRoutes;  
