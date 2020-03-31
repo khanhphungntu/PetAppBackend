@@ -60,15 +60,6 @@ scheduleRoutes.route('/add').post(function (req, res) {
     }})
 })
 
-//get unavailable dates by id
-scheduleRoutes.route('/:id').get(function (req, res) {
-    var id = req.params.id;
-
-    Schedule.findById({ _id: id }, function (err, unavailableDate) {
-        if (err) res.json(err);
-        else res.status(200).json(unavailableDate);
-    })
-})
 
 //get unavailable dates by vendorID
 scheduleRoutes.route('/vendor/:id').get(function (req, res) {
@@ -83,6 +74,16 @@ scheduleRoutes.route('/vendor/:id').get(function (req, res) {
     Schedule.find({ vendorId: id }, function (err, schedule) {
         if (err) res.json(err);
         else res.status(200).json(schedule);
+    })
+})
+
+//get unavailable dates by id
+scheduleRoutes.route('/:id').get(function (req, res) {
+    var id = req.params.id;
+
+    Schedule.findById({ _id: id }, function (err, unavailableDate) {
+        if (err) res.json(err);
+        else res.status(200).json(unavailableDate);
     })
 })
 
