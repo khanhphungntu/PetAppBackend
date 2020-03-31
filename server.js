@@ -16,10 +16,10 @@ const scheduleRoutes = require('./server/expressRoutes/scheduleRoutes');
 const notificationRoutes = require('./server/expressRoutes/notificationRoutes');
 const vendorLocationRoutes = require('./server/expressRoutes/vendorLocationRoutes');
 const bookingRoutes = require('./server/expressRoutes/bookingRoutes');
-
+const serviceNotificationRoutes = require('./server/notification/serviceNotificationRoutes');
 //connect app to mongoDB
 mongoose.Promise = global.Promise;
-mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?retryWrites=true&w=majority').then(
+mongoose.connect('mongodb://localhost:27017/petApp').then(
   () => {console.log('Database is connected') },
   err => { console.log('Can not connect to the database'+ err)}
 );
@@ -41,7 +41,11 @@ app.use('/api/notification', notificationRoutes);
 app.use('/api/schedule', withAuth, scheduleRoutes);
 app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
+app.use('/api/serviceNotification', withAuth, serviceNotificationRoutes);
+
+const noti = require('./server/services/notification');
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
+    noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])
 });
