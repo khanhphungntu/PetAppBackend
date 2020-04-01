@@ -64,12 +64,12 @@ scheduleRoutes.route('/add').post(function (req, res) {
 //get unavailable dates by vendorID
 scheduleRoutes.route('/vendor/:id').get(function (req, res) {
     var id = req.params.id;
-    var extractedId = req.id;
+ //   var extractedId = req.id;
 
-    if (extractedId != id) {
-        res.status(401).send('Unauthorized user');
-        return;
-    }
+    // if (extractedId != id) {
+    //     res.status(401).send('Unauthorized user');
+    //     return;
+    // }
 
     Schedule.find({ vendorId: id }, function (err, schedule) {
         if (err) res.json(err);
