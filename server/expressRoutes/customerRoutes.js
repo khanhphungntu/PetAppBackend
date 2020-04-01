@@ -27,7 +27,11 @@ customerRoutes.route('/:id').put((req, res) => {
 
     Customer.findById(id, (err, customer) => {
         
-        if (!customer || err) return next(new Error('Could not load Document'));
+        if (!customer || err) 
+        {
+            res.status(400).json('Could not load Document or error '+err);
+            return;
+        }
         else {
 
             for ( item of Object.keys(req.body)){
@@ -62,7 +66,11 @@ customerRoutes.route('/password/:id').put((req, res) => {
     
     Customer.findById(id, (err, customer) => {
         
-        if (!customer || err) return next(new Error('Could not load Document'));
+        if (!customer || err)
+        {
+            res.status(400).json("Customer not found or error "+err)
+            return
+        } 
         else {
             authSevice.hashPassword(req.body.password, (hashedPassword) => {
                 customer["password"] = hashedPassword;

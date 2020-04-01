@@ -4,13 +4,13 @@ var Schema = mongoose.Schema;
 
 // Define collection and schema for Items
 var notification = new Schema({
-
-  content: String,
-  time: { type : Date, default: Date.now },
-  customerId: String,
+  time: { type : Date},
+  petId: String,
+  bookingId: String,
   vendorId: String,
+  customerId: String,
   bookingStatus: { type: String, enum: ['cancelled', 'completed', 'booked', 'updated']},
-  bookingId: String
+  createdAt: {type: Date,default:Date.now}
 },{
   collection: 'notifications'
 });

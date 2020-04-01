@@ -22,10 +22,12 @@ bookingRoutes.route('/').post((req, res) => {
         res.status(200).json({item});
         //create new notification when a booking is made
         var notification = new Notification();
+        notification.time = item.time
+        notification.petId = item.petId
+        notification.bookingId = item._id;
         notification.vendorId = item.vendorId;
         notification.customerId = item.customerId;
         notification.bookingStatus = 'booked';
-        notification.bookingId = item._id;
         notification.save()
         .catch(err => {
             console.log(err);
@@ -126,12 +128,14 @@ bookingRoutes.route('/:id').put((req, res) => {
             }
 
             booking.save()
-            .then(booking => {
+            .then(item => {
                 var notification = new Notification();
+                notification.time = req.body.time;
+                notification.petId = req.body.petId;
+                notification.bookingId = id;
                 notification.vendorId = req.body.vendorId;
                 notification.customerId = req.body.customerId;
                 notification.bookingStatus = req.body.status;
-                notification.bookingId = id;
                 notification.save()
                     .then( () => {
                         res.status(200).json("ok");
