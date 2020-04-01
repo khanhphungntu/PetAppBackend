@@ -24,13 +24,8 @@ petRoutes.route('/:id').delete((req, res) => {
 
     Pet.findById(id, (err, pet) => {
 
-        if (!pet || err){
-            res.status(400).json("Pet not found or " + err);
-           
-            return;
-        }
+        if (!pet || err) return next(new Error('Could not load Document'));
         else {
-            console.log(pet)
             if (pet.deletedAt != null) {
                 res.json("Pet is already deleted!");
                 return;
@@ -57,7 +52,11 @@ petRoutes.route('/:id').get(function (req, res) {
 
     Pet.findById(id, (err, pet) => {
 
-        if (err) res.json(err);
+        if (!pet || err){
+            res.status(400).json("Pet not found or " + err);
+            return;
+        }
+      
         else {
             if (pet.deletedAt != null) {
                 res.json("Pet is already deleted!");
@@ -96,7 +95,10 @@ petRoutes.route('/:id').put(function (req, res) {
 
     Pet.findById(id, (err, pet) => {
 
-        if (!pet || err) return next(new Error('Could not load Document'));
+        if (!pet || err){
+            res.status(400).json("Pet not found or " + err);
+            return;
+        }
         else {
             if (extractedId != req.body.customerId) {
                 res.status(401).send('Unauthorized user');
