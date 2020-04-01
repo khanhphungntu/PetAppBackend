@@ -37,7 +37,8 @@ scheduleRoutes.route('/add').post(function (req, res) {
                                 notification.customerId = booking.customerId;
                                 notification.bookingStatus = "cancelled";
                                 notification.bookingId = booking.id;
-                                notification.vendorId = booking.vendorId;
+                                notification.petId = booking.petId;
+                                notification.time = booking.time;
                                 notification.save()
                             }
                         }
