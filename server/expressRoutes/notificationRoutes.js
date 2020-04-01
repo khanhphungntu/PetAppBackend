@@ -1,106 +1,116 @@
-var express = require('express');
+var express = require("express");
 var notificationRoutes = express.Router();
-var Notification = require('../models/notification');
+var Notification = require("../models/notification");
 const app = express();
 
 // add new notification
-notificationRoutes.route('/add').post(function (req, res) {
+notificationRoutes.route("/add").post(function(req, res) {
+  var notification = new Notification(req.body);
 
-    var notification = new Notification(req.body);
-    
-    notification.save()
+  notification
+    .save()
     .then(item => {
-        res.status(200).json({item});
+      res.status(200).json({ item });
     })
     .catch(err => {
-        res.status(400).send("unable to save to database");
+      res.status(400).send("unable to save to database");
     });
-
 });
-
 
 // delete notification from database
-notificationRoutes.route('/:id').delete(function (req, res) {
-
-    Notification.findByIdAndRemove({_id: req.params.id}, function(err, notification){
-
-      if(err) res.json(err);
-      else res.status(200).json('Successfully removed');
-
-    });
-
+notificationRoutes.route("/:id").delete(function(req, res) {
+  Notification.findByIdAndRemove({ _id: req.params.id }, function(
+    err,
+    notification
+  ) {
+    if (err) res.json(err);
+    else res.status(200).json("Successfully removed");
+  });
 });
-
-
 
 //read notification of one customer
-notificationRoutes.route('/customer/:id').get(function(req,res){
-    var customerId = req.params.id;
+notificationRoutes.route("/customer/:id").get(function(req, res) {
+  var customerId = req.params.id;
 
-    console.log("customerId: "+customerId)
-    var extractedId = req.id;
-    console.log("extractedId: "+extractedId)
-    console.log("aaaa")
-    if(extractedId != customerId){
-        res.status(410).send('Unauthorized user');
-        return;
-    }
+  // console.log("customerId: "+customerId)
+  var extractedId = req.id;
+  // console.log("extractedId: "+extractedId)
+  // console.log("aaaa")
+  var date = req.body.date || Date.now();
+  if (extractedId != customerId) {
+    res.status(410).send("Unauthorized user");
+    return;
+  }
 
-    Notification.find({customerId:customerId}).sort({createdAt:-1}).limit(20).exec( function(err, notification){
-        if (err) {
-            console.log(err);
-            res.send.json('An error occurs!');
-        }
-        console.log(notification)
-        res.status(200).json(notification);
-    })
-})
+  Notification.find({ customerId: customerId, createdAt: { $lt: date } })
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .exec(function(err, notification) {
+      if (err) {
+        console.log(err);
+        res.status(400).json("An error occurs!");
+      }
+      console.log(notification);
+      res.status(200).json(notification);
+    });
+});
 
 //read notification of one vendor
-notificationRoutes.route('/vendor/:id').get(function(req,res){
-    var vendorId = req.params.id;
-    var extractedId = req.id;
+notificationRoutes.route("/vendor/:id").get(function(req, res) {
+  var vendorId = req.params.id;
+  var extractedId = req.id;
+  console.log(req.body.date);
+  var date = req.body.date || Date.now();
+  console.log(date);
+  if (extractedId != vendorId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
 
-    if(extractedId != vendorId){
-        res.status(401).send('Unauthorized user');
+  //console.log(new Date("2020-03-30T02:59:22.498+00:00")<date)
+  Notification.find({ vendorId: vendorId, createdAt: { $lt: date } })
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .exec(function(err, notification) {
+      if (err) {
+        console.log(err);
+        res.status(400).json("An error occurs!");
         return;
-    }
+      }
 
-    Notification.find({vendorId:vendorId}).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
-        if (err) {
-            console.log(err);
-            res.send.json('An error occurs!');
-        }
-        res.status(200).json(notification);
-    })
-})
+      console.log(notification);
+      res.status(200).json(notification);
+    });
+});
 
 //read notification of one pet
-notificationRoutes.route('/pet/:id').get(function(req,res){
-    var petId = req.params.id;
-    var extractedId = req.id;
+//will think about the security here
+notificationRoutes.route("/pet/:id").get(function(req, res) {
+  var petId = req.params.id;
+  var extractedId = req.id;
+  var date = req.body.date || Date.now();
 
-    if(extractedId != petId){
-        res.status(401).send('Unauthorized user');
-        return;
-    }
+  //   if (extractedId != petId) {
+  //     res.status(401).send("Unauthorized user");
+  //     return;
+  //   }
 
-    Notification.find(petId).sort({createdAt:-1}).limit(20).exec(  function(err, notification){
-        if (err) {
-            console.log(err);
-            res.send.json('An error occurs!');
-        }
-        res.status(200).json(notification);
-    })
-})
-//read notification by id
-notificationRoutes.route('/:id').get(function(req,res){
-    Notification.findById({_id: req.params.id},function(err,notification){
-
-        if(err) res.json(err);
-        else res.status(200).json(notification);
-        
-     })
-
+  Notification.find({ petId: petId, createdAt: { $lt: date } })
+    .sort({ createdAt: -1 })
+    .limit(10)
+    .exec(function(err, notification) {
+      if (err) {
+        console.log(err);
+        res.status(400).json("An error occurs!");
+      }
+      res.status(200).json(notification);
+    });
 });
-module.exports = notificationRoutes;  
+//read notification by id
+notificationRoutes.route("/:id").get(function(req, res) {
+  Notification.findById({ _id: req.params.id }, function(err, notification) {
+    if (err) res.json(err);
+    else res.status(200).json(notification);
+  });
+});
+module.exports = notificationRoutes;
