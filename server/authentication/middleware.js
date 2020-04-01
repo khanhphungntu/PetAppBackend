@@ -6,7 +6,7 @@ const withAuth = function(req, res, next) {
         req.body.token ||
         req.query.token ||
         req.headers['token'];
-    console.log("token is "+ token);
+
     if (!token) {
         console.log(token);
         res.status(401).send('Unauthorized: No token provided');
