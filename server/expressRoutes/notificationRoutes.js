@@ -29,14 +29,12 @@ notificationRoutes.route("/:id").delete(function(req, res) {
 });
 
 //read notification of one customer
-notificationRoutes.route("/customer/:id").get(function(req, res) {
+notificationRoutes.route("/customer/:id/:fromTime").get(function(req, res) {
   var customerId = req.params.id;
-
-  // console.log("customerId: "+customerId)
   var extractedId = req.id;
-  // console.log("extractedId: "+extractedId)
-  // console.log("aaaa")
-  var date = req.body.date || Date.now();
+
+  var date = req.params.fromTime || Date.now();
+
   if (extractedId != customerId) {
     res.status(410).send("Unauthorized user");
     return;
@@ -44,13 +42,12 @@ notificationRoutes.route("/customer/:id").get(function(req, res) {
 
   Notification.find({ customerId: customerId, createdAt: { $lt: date } })
     .sort({ createdAt: -1 })
-    .limit(10)
+    .limit(12)
     .exec(function(err, notification) {
       if (err) {
         console.log(err);
         res.status(400).json("An error occurs!");
       }
-      console.log(notification);
       res.status(200).json(notification);
     });
 });

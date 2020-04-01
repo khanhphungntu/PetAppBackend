@@ -50,5 +50,5 @@ const noti = require('./server/services/notification');
 const port = process.env.PORT || 4000;
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
-    //noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])
+    noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])
 });
