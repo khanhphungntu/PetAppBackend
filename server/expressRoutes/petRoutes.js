@@ -26,9 +26,11 @@ petRoutes.route('/:id').delete((req, res) => {
 
         if (!pet || err){
             res.status(400).json("Pet not found or " + err);
+           
             return;
         }
         else {
+            console.log(pet)
             if (pet.deletedAt != null) {
                 res.json("Pet is already deleted!");
                 return;
