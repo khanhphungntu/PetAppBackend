@@ -56,18 +56,17 @@ notificationRoutes.route("/customer/:id").get(function(req, res) {
 });
 
 //read notification of one vendor
-notificationRoutes.route("/vendor/:id").get(function(req, res) {
+notificationRoutes.route("/vendor/:id/:fromTime").get(function(req, res) {
   var vendorId = req.params.id;
   var extractedId = req.id;
-  console.log(req.body.date);
-  var date = req.body.date || Date.now();
-  console.log(date);
+
   if (extractedId != vendorId) {
     res.status(401).send("Unauthorized user");
     return;
   }
 
-  //console.log(new Date("2020-03-30T02:59:22.498+00:00")<date)
+  var date = req.params.fromTime || Date.now();
+
   Notification.find({ vendorId: vendorId, createdAt: { $lt: date } })
     .sort({ createdAt: -1 })
     .limit(10)
@@ -77,8 +76,6 @@ notificationRoutes.route("/vendor/:id").get(function(req, res) {
         res.status(400).json("An error occurs!");
         return;
       }
-
-      console.log(notification);
       res.status(200).json(notification);
     });
 });
