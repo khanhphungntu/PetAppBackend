@@ -1,179 +1,213 @@
-var express = require('express');
+var express = require("express");
 var bookingRoutes = express.Router();
-var Booking = require('../models/booking');
-var Notification = require('../models/notification');
-var Schedule = require('../models/unavailableDate');
+var Booking = require("../models/booking");
+var Notification = require("../models/notification");
+var Schedule = require("../models/unavailableDate");
 
 //add new booking
-bookingRoutes.route('/').post((req, res) => {
+bookingRoutes.route("/").post((req, res) => {
+  var booking = new Booking(req.body);
+  var extractedId = req.id;
 
-    var booking = new Booking(req.body);
-    var extractedId = req.id;
+  if (extractedId != booking.customerId) {
+    console.log(extractedId);
+    console.log(booking.customerId);
+    res.status(401).send("Unauthorized user");
+    return;
+  }
 
-    if(extractedId != booking.customerId){
-        console.log(extractedId);
-        console.log(booking.customerId)
-        res.status(401).send('Unauthorized user');
-        return;
-    }
-
-    booking.save()
+  booking
+    .save()
     .then(item => {
-        res.status(200).json({item});
-        //create new notification when a booking is made
-        var notification = new Notification();
-        notification.time = item.time
-        notification.petId = item.petId
-        notification.bookingId = item._id;
-        notification.vendorId = item.vendorId;
-        notification.customerId = item.customerId;
-        notification.bookingStatus = 'booked';
-        notification.save()
-        .catch(err => {
-            console.log(err);
-            res.status(400).send("Unable to save to database");
-        })
-    })
-    .catch(err => {
+      res.status(200).json({ item });
+      //create new notification when a booking is made
+      var notification = new Notification();
+      notification.time = item.time;
+      notification.petId = item.petId;
+      notification.bookingId = item._id;
+      notification.vendorId = item.vendorId;
+      notification.customerId = item.customerId;
+      notification.bookingStatus = "booked";
+      notification.save().catch(err => {
         console.log(err);
         res.status(400).send("Unable to save to database");
+      });
     })
-
-    
-})
+    .catch(err => {
+      console.log(err);
+      res.status(400).send("Unable to save to database");
+    });
+});
 
 //query booking of one customer
-bookingRoutes.route('/customer/:id').get((req, res) => {
-    var customerId = req.params.id;
-    var extractedId = req.id;
+bookingRoutes.route("/customer/:id").get((req, res) => {
+  var customerId = req.params.id;
+  var extractedId = req.id;
 
-    if(extractedId != customerId){
-        res.status(401).send('Unauthorized user');
-        return;
+  if (extractedId != customerId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ customerId: req.params.id }, (err, bookings) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
     }
-
-    Booking.find({customerId: req.params.id},  (err, bookings) => {
-        if(err){
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(bookings);
-    });
-})
+    res.status(200).json(bookings);
+  });
+});
 
 //query booking of one vendor
-bookingRoutes.route('/vendor/:id').get((req, res) => {
-    var vendorId = req.params.id;
-    var extractedId = req.id;
+bookingRoutes.route("/vendor/:id").get((req, res) => {
+  var vendorId = req.params.id;
+  var extractedId = req.id;
 
-    if(extractedId != vendorId){
-        res.status(401).send('Unauthorized user');
-        return;
+  if (extractedId != vendorId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ vendorId: req.params.id }, (err, bookings) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
     }
-    
-    Booking.find({vendorId: req.params.id},  (err, bookings) => {
-        if(err){
-            console.log(err);
-            res.status(400).send("An error occurs!");
+    res.status(200).json(bookings);
+  });
+});
+
+//query booking by month of one vendor
+bookingRoutes.route("/month/vendor/:id").get((req, res) => {
+  var vendorId = req.params.id;
+  var extractedId = req.id;
+  var month = req.body.month;
+
+  if (extractedId != vendorId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ vendorId: vendorId })
+    .sort({ time: -1 })
+    .exec((err, bookings) => {
+      if (err) {
+        returnedBookings
+          .status(400)
+          .send("Some errors in finding the bookings");
+        return;
+      } else {
+        returnedBookings = [];
+        console.log("month is :", month);
+        for (i in bookings) {
+          let monthBooking = bookings[i].time.getMonth() + 1;
+          console.log(bookings[i].time);
+          console.log(monthBooking);
+          if (month == monthBooking) returnedBookings.push(bookings[i]);
         }
-        res.status(200).json(bookings);
+        res.status(200).json(returnedBookings);
+        return;
+      }
     });
-})
+});
 
 //query booking of one pet
-bookingRoutes.route('/pet/:id').get((req, res) => {
-    Booking.find({petId: req.params.id},  (err, bookings) => {
-        if(err){
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(bookings);
-    });
-})
+bookingRoutes.route("/pet/:id").get((req, res) => {
+  Booking.find({ petId: req.params.id }, (err, bookings) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
+    }
+    res.status(200).json(bookings);
+  });
+});
 
 //get boooking by id
-bookingRoutes.route('/:id').get((req, res) => {
-    var id = req.params.id;
-    var extractedId = req.id;
+bookingRoutes.route("/:id").get((req, res) => {
+  var id = req.params.id;
+  var extractedId = req.id;
 
-    Booking.findById(id,  (err, booking) => {
-        if(err){
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(booking);
-    });
-})
+  Booking.findById(id, (err, booking) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
+    }
+    res.status(200).json(booking);
+  });
+});
 
 //update booking (cancel/complete booking)
 //must enter status to set status
-bookingRoutes.route('/:id').put((req, res) => {
-    var id = req.params.id;
-    var extractedId = req.id;
+bookingRoutes.route("/:id").put((req, res) => {
+  var id = req.params.id;
+  var extractedId = req.id;
 
-    Booking.findById(id, (err, booking) => {
-        
-        if (err) return res.json(err);
-        else {
-            if(extractedId != req.body.vendorId && extractedId != req.body.customerId){
-                res.status(401).send('Unauthorized user');
-                return;
-            }
-            
-            for ( item of Object.keys(req.body)){
-                if(item == "password"){
-                    continue;
-                }
-                booking[item] = req.body[item];
-            }
+  Booking.findById(id, (err, booking) => {
+    if (err) return res.json(err);
+    else {
+      if (
+        extractedId != req.body.vendorId &&
+        extractedId != req.body.customerId
+      ) {
+        res.status(401).send("Unauthorized user");
+        return;
+      }
 
-            booking.save()
-            .then(item => {
-                var notification = new Notification();
-                notification.time = req.body.time;
-                notification.petId = req.body.petId;
-                notification.bookingId = id;
-                notification.vendorId = req.body.vendorId;
-                notification.customerId = req.body.customerId;
-                notification.bookingStatus = req.body.status;
-                notification.save()
-                    .then( () => {
-                        res.status(200).json("ok");
-                    })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(400).send("Unable to save to database");
-                    })
-                
+      for (item of Object.keys(req.body)) {
+        if (item == "password") {
+          continue;
+        }
+        booking[item] = req.body[item];
+      }
+
+      booking
+        .save()
+        .then(item => {
+          var notification = new Notification();
+          notification.time = req.body.time;
+          notification.petId = req.body.petId;
+          notification.bookingId = id;
+          notification.vendorId = req.body.vendorId;
+          notification.customerId = req.body.customerId;
+          notification.bookingStatus = req.body.status;
+          notification
+            .save()
+            .then(() => {
+              res.status(200).json("ok");
             })
             .catch(err => {
-                console.log(err);
-                res.status(400).send("unable to update the database");
+              console.log(err);
+              res.status(400).send("Unable to save to database");
             });
-            
-        }
-
-    })
-})
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(400).send("unable to update the database");
+        });
+    }
+  });
+});
 
 //remove booking
-bookingRoutes.route('/:id').delete((req, res) => {
-    var id = req.params.id;
-    var extractedId = req.id;
+bookingRoutes.route("/:id").delete((req, res) => {
+  var id = req.params.id;
+  var extractedId = req.id;
 
-    Booking.findById(id, (err, booking) => {
-        if(err) res.status(400).json("An error occurs!");
-        else{
-            if(extractedId != req.body.vendorId && extractedId != req.body.customerId){
-                res.status(401).send('Unauthorized user');
-                return;
-            }
-            booking.remove()
-            .then((v) => {
-                res.status(200).json("Delete succesfully!")
-            })
-        }
-    })
-})
+  Booking.findById(id, (err, booking) => {
+    if (err) res.status(400).json("An error occurs!");
+    else {
+      if (
+        extractedId != req.body.vendorId &&
+        extractedId != req.body.customerId
+      ) {
+        res.status(401).send("Unauthorized user");
+        return;
+      }
+      booking.remove().then(v => {
+        res.status(200).json("Delete succesfully!");
+      });
+    }
+  });
+});
 
 module.exports = bookingRoutes;
