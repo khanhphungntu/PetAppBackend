@@ -5,7 +5,7 @@ var Schema = mongoose.Schema;
 // Define collection and schema for Items
 var unavailableDate = new Schema({
 
-  date: String,
+  date: Date,
   vendorId: String
 
 },{
