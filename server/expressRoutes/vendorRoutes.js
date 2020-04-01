@@ -27,7 +27,10 @@ vendorRoutes.route('/:id').put((req, res) => {
 
     Vendor.findById(id, (err, vendor) => {
         
-        if (!vendor || err) return next(new Error('Could not load Document'));
+        if (!vendor || err){
+            res.status(400).json('Could not load Document');
+            return;
+        } 
         else {
 
             for ( item of Object.keys(req.body)){
@@ -62,7 +65,10 @@ vendorRoutes.route('/password/:id').put((req, res) => {
 
     Vendor.findById(id, (err, vendor) => {
         
-        if (!vendor || err) return next(new Error('Could not load Document'));
+        if (!vendor || err)
+        { 
+            res.json('Could not load Document');
+            return;}
         else {
             authSevice.hashPassword(req.body.password, (hashedPassword) => {
                 vendor["password"] = hashedPassword;
