@@ -98,11 +98,11 @@ bookingRoutes.route("/month/vendor/:id").get((req, res) => {
         return;
       } else {
         returnedBookings = [];
-        console.log("month is :", month);
+        //console.log("month is :", month);
         for (i in bookings) {
           let monthBooking = bookings[i].time.getMonth() + 1;
-          console.log(bookings[i].time);
-          console.log(monthBooking);
+          //console.log(bookings[i].time);
+          //console.log(monthBooking);
           if (month == monthBooking) returnedBookings.push(bookings[i]);
         }
         res.status(200).json(returnedBookings);
