@@ -201,7 +201,6 @@ bookingRoutes.route("/:id").get((req, res) => {
 //update booking (cancel/complete booking)
 //must enter status to set status
 bookingRoutes.route("/:id").put((req, res) => {
-<<<<<<< HEAD
   var id = req.params.id;
   var extractedId = req.id;
 
@@ -319,55 +318,6 @@ bookingRoutes.route("/:id").put((req, res) => {
         });
     }
   });
-=======
-    var id = req.params.id;
-    var extractedId = req.id;
-
-    Booking.findById(id, (err, booking) => {
-        if (err) return res.json(err);
-        else {
-            if (
-                extractedId != req.body.vendorId &&
-                extractedId != req.body.customerId
-            ) {
-                res.status(401).send("Unauthorized user");
-                return;
-            }
-
-            for (item of Object.keys(req.body)) {
-                if (item == "password") {
-                    continue;
-                }
-                booking[item] = req.body[item];
-            }
-
-            booking
-                .save()
-                .then(item => {
-                    var notification = new Notification();
-                    notification.time = req.body.time;
-                    notification.petId = req.body.petId;
-                    notification.bookingId = id;
-                    notification.vendorId = req.body.vendorId;
-                    notification.customerId = req.body.customerId;
-                    notification.bookingStatus = req.body.status;
-                    notification
-                        .save()
-                        .then(() => {
-                            res.status(200).json("ok");
-                        })
-                        .catch(err => {
-                            console.log(err);
-                            res.status(400).send("Unable to save to database");
-                        });
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).send("unable to update the database");
-                });
-        }
-    });
->>>>>>> 65ebe15c75b96af55a5b8196c7c564872394f1af
 });
 
 //remove booking
