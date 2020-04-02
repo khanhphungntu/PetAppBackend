@@ -3,7 +3,10 @@ var bookingRoutes = express.Router();
 var Booking = require("../models/booking");
 var Notification = require("../models/notification");
 var Schedule = require("../models/unavailableDate");
-
+var Pet = require("../models/pet");
+var Customer = require("../models/customer");
+var sendNotif = require("../services/notification");
+var ServiceNotification = require("../models/serviceNotification");
 //add new booking
 bookingRoutes.route("/").post((req, res) => {
   var booking = new Booking(req.body);
@@ -19,7 +22,6 @@ bookingRoutes.route("/").post((req, res) => {
   booking
     .save()
     .then(item => {
-      res.status(200).json({ item });
       //create new notification when a booking is made
       var notification = new Notification();
       notification.time = item.time;
@@ -28,10 +30,80 @@ bookingRoutes.route("/").post((req, res) => {
       notification.vendorId = item.vendorId;
       notification.customerId = item.customerId;
       notification.bookingStatus = "booked";
-      notification.save().catch(err => {
-        console.log(err);
-        res.status(400).send("Unable to save to database");
-      });
+      notification
+        .save()
+        .then(notif => {
+          console.log(1);
+          Pet.findById(req.body.petId, (err, pet) => {
+            if (!err) {
+              Customer.findById(req.body.customerId, (err, customer) => {
+                if (!err) {
+                  console.log(2);
+                  let time = new Date(req.body.time);
+                  month = time.getMonth() + 1;
+                  year = time.getFullYear();
+                  date = time.getDate();
+                  notifCustomer =
+                    "Your booking for pet " +
+                    pet.name +
+                    " on " +
+                    date +
+                    "-" +
+                    month +
+                    "-" +
+                    year +
+                    "is booked";
+                  notifVendor =
+                    "Your booking with " +
+                    customer.firstName +
+                    " " +
+                    customer.lastName +
+                    " on " +
+                    date +
+                    "-" +
+                    month +
+                    "-" +
+                    year +
+                    "is booked";
+                  ServiceNotification.findOne(
+                    { userId: customer._id },
+                    (err, serNotifCustomer) => {
+                      if (!err) {
+                        console.log(3);
+                        console.log(serNotifCustomer.deviceId);
+                        for (let deviceId of serNotifCustomer.deviceId) {
+                          console.log(deviceId);
+                          sendNotif.send([deviceId], notifCustomer);
+                        }
+                        ServiceNotification.findOne(
+                          { userId: req.body.vendorId },
+                          (err, serNotifVendor) => {
+                            if (!err) {
+                              console.log(4);
+                              console.log(req.body.vendorId);
+                              console.log(serNotifVendor);
+                              for (let deviceId of serNotifVendor.deviceId) {
+                                console.log(deviceId);
+                                sendNotif.send([deviceId], notifVendor);
+                              }
+                              res
+                                .status(200)
+                                .send("all of the stuff is done\n" + { item });
+                            }
+                          }
+                        );
+                      }
+                    }
+                  );
+                }
+              });
+            }
+          });
+        })
+        .catch(err => {
+          console.log(err);
+          res.status(400).send("Unable to save to database");
+        });
     })
     .catch(err => {
       console.log(err);
@@ -143,7 +215,7 @@ bookingRoutes.route("/:id").put((req, res) => {
   var extractedId = req.id;
 
   Booking.findById(id, (err, booking) => {
-    if (err) return res.json(err);
+    if (err || !booking) return res.json(err);
     else {
       if (
         extractedId != req.body.vendorId &&
@@ -172,9 +244,79 @@ bookingRoutes.route("/:id").put((req, res) => {
           notification.bookingStatus = req.body.status;
           notification
             .save()
-            .then(() => {
-              res.status(200).json("ok");
+            .then(notif => {
+              console.log(1);
+              Pet.findById(req.body.petId, (err, pet) => {
+                if (!err) {
+                  Customer.findById(req.body.customerId, (err, customer) => {
+                    if (!err) {
+                      console.log(2);
+                      let time = new Date(req.body.time);
+                      month = time.getMonth() + 1;
+                      year = time.getFullYear();
+                      date = time.getDate();
+                      notifCustomer =
+                        "Your booking for pet " +
+                        pet.name +
+                        " on " +
+                        date +
+                        "-" +
+                        month +
+                        "-" +
+                        year +
+                        "is " +
+                        req.body.status;
+                      notifVendor =
+                        "Your booking with " +
+                        customer.firstName +
+                        " " +
+                        customer.lastName +
+                        " on " +
+                        date +
+                        "-" +
+                        month +
+                        "-" +
+                        year +
+                        " is " +
+                        req.body.status;
+                      ServiceNotification.findOne(
+                        { userId: customer._id },
+                        (err, serNotifCustomer) => {
+                          if (!err) {
+                            console.log(3);
+                            console.log(serNotifCustomer.deviceId);
+                            for (let deviceId of serNotifCustomer.deviceId) {
+                              console.log(deviceId);
+                              sendNotif.send([deviceId], notifCustomer);
+                            }
+                            ServiceNotification.findOne(
+                              { userId: req.body.vendorId },
+                              (err, serNotifVendor) => {
+                                if (!err) {
+                                  console.log(4);
+                                  console.log(req.body.vendorId);
+                                  console.log(serNotifVendor);
+                                  for (let deviceId of serNotifVendor.deviceId) {
+                                    console.log(deviceId);
+                                    sendNotif.send([deviceId], notifVendor);
+                                  }
+                                  res
+                                    .status(200)
+                                    .send(
+                                      "all of the stuff is done\n" + { item }
+                                    );
+                                }
+                              }
+                            );
+                          }
+                        }
+                      );
+                    }
+                  });
+                }
+              });
             })
+
             .catch(err => {
               console.log(err);
               res.status(400).send("Unable to save to database");

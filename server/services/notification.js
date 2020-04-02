@@ -1,6 +1,10 @@
 var admin = require("firebase-admin");
 const { Expo } = require('expo-server-sdk')
 var serviceAccount = require("../../fcm.json");
+// var Pet = require("../models/pet");
+// var Customer = require("../models/customer");
+// var ServiceNotification = require("../models/serviceNotification");
+
 
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
@@ -8,8 +12,7 @@ admin.initializeApp({
 });
 
 var notification = {};
-
-notification.send = async (somePushTokens) => {
+send = async (somePushTokens,notif) => {
     // var payload = {
     //     notification: {
     //       title: "Account Deposit",
@@ -39,7 +42,7 @@ notification.send = async (somePushTokens) => {
         messages.push({
             to: pushToken,
             sound: 'default',
-            body: 'If a ticket contains an error code in ticket.details.error, you must handle it appropriately'
+            body: notif
         })
     }
 
@@ -60,5 +63,76 @@ notification.send = async (somePushTokens) => {
         }
     }
 }
+notification.send = send
+
+// notification.sendByNotif = (notif)=>{
+    
+//     console.log(1);
+//     Pet.findById(notif.petId, (err, pet) => {
+//       if (!err) {
+//         Customer.findById(notif.customerId, (err, customer) => {
+//           if (!err) {
+//             console.log(2);
+//             let time = new Date(notif.time);
+//             month = time.getMonth() + 1;
+//             year = time.getFullYear();
+//             date = time.getDate();
+//             notifCustomer =
+//               "Your booking for pet " +
+//               pet.name +
+//               " on " +
+//               date +
+//               "-" +
+//               month +
+//               "-" +
+//               year +
+//               "is booked";
+//             notifVendor =
+//               "Your booking with " +
+//               customer.firstName +
+//               " " +
+//               customer.lastName +
+//               " on " +
+//               date +
+//               "-" +
+//               month +
+//               "-" +
+//               year +
+//               "is booked";
+//             ServiceNotification.findOne(
+//               { userId: customer._id },
+//               (err, serNotifCustomer) => {
+//                 if (!err) {
+//                   console.log(3);
+//                   console.log(serNotifCustomer.deviceId);
+//                   for (let deviceId of serNotifCustomer.deviceId) {
+//                     console.log(deviceId);
+//                     send([deviceId], notifCustomer);
+//                   }
+//                   ServiceNotification.findOne(
+//                     { userId: notif.vendorId },
+//                     (err, serNotifVendor) => {
+//                       if (!err) {
+//                         console.log(4);
+//                         console.log(notif.vendorId);
+//                         console.log(serNotifVendor);
+//                         for (let deviceId of serNotifVendor.deviceId) {
+//                           console.log(deviceId);
+//                           send([deviceId], notifVendor);
+//                         }
+//                         res
+//                           .status(200)
+//                           .send("all of the stuff is done\n" + { item });
+//                       }
+//                     }
+//                   );
+//                 }
+//               }
+//             );
+//           }
+//         });
+//       }
+//     });
+// }
 
 module.exports = notification;
