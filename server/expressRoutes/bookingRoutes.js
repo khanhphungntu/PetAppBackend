@@ -178,7 +178,7 @@ bookingRoutes.route("/vendor/time/:id/:from/:to").get((req, res) => {
 //query booking of one pet
 bookingRoutes.route("/pet/:id").get((req, res) => {
   Booking.find({ petId: req.params.id })
-    .sort({ time: -1 })
+    .sort({ createdAt: -1 })
     .exec((err, bookings) => {
       if (err) {
         console.log(err);
