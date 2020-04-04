@@ -21,7 +21,7 @@ bookingRoutes.route("/").post((req, res) => {
 
   booking
     .save()
-    .then(item => {
+    .then((item) => {
       //create new notification when a booking is made
       var notification = new Notification();
       notification.time = item.time;
@@ -32,12 +32,12 @@ bookingRoutes.route("/").post((req, res) => {
       notification.bookingStatus = "booked";
       notification
         .save()
-        .then(notif => {
+        .then((notif) => {
           console.log(1);
           Pet.findById(req.body.petId, (err, pet) => {
-            if (!err) {
+            if (!err && pet) {
               Customer.findById(req.body.customerId, (err, customer) => {
-                if (!err) {
+                if (!err && customer) {
                   console.log(2);
                   let time = new Date(req.body.time);
                   month = time.getMonth() + 1;
@@ -68,7 +68,7 @@ bookingRoutes.route("/").post((req, res) => {
                   ServiceNotification.findOne(
                     { userId: customer._id },
                     (err, serNotifCustomer) => {
-                      if (!err) {
+                      if (!err && serNotifCustomer) {
                         console.log(3);
                         console.log(serNotifCustomer.deviceId);
                         for (let deviceId of serNotifCustomer.deviceId) {
@@ -78,7 +78,7 @@ bookingRoutes.route("/").post((req, res) => {
                         ServiceNotification.findOne(
                           { userId: req.body.vendorId },
                           (err, serNotifVendor) => {
-                            if (!err) {
+                            if (!err && serNotifVendor) {
                               console.log(4);
                               console.log(req.body.vendorId);
                               console.log(serNotifVendor);
@@ -100,12 +100,12 @@ bookingRoutes.route("/").post((req, res) => {
             }
           });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           res.status(400).send("Unable to save to database");
         });
     })
-    .catch(err => {
+    .catch((err) => {
       console.log(err);
       res.status(400).send("Unable to save to database");
     });
@@ -113,89 +113,93 @@ bookingRoutes.route("/").post((req, res) => {
 
 //query booking of one customer
 bookingRoutes.route("/customer/:id").get((req, res) => {
-    var customerId = req.params.id;
-    var extractedId = req.id;
+  var customerId = req.params.id;
+  var extractedId = req.id;
 
-    if (extractedId != customerId) {
-        res.status(401).send("Unauthorized user");
-        return;
+  if (extractedId != customerId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ customerId: req.params.id })
+  .sort({time:-1})
+  .exec( (err, bookings) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
     }
-
-    Booking.find({ customerId: req.params.id }, (err, bookings) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(bookings);
-    });
+    res.status(200).json(bookings);
+  });
 });
 
 //query booking of one vendor
 bookingRoutes.route("/vendor/:id").get((req, res) => {
-    var vendorId = req.params.id;
-    var extractedId = req.id;
+  var vendorId = req.params.id;
+  var extractedId = req.id;
 
-    if (extractedId != vendorId) {
-        res.status(401).send("Unauthorized user");
-        return;
+  if (extractedId != vendorId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ vendorId: req.params.id }, (err, bookings) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
     }
-
-    Booking.find({ vendorId: req.params.id }, (err, bookings) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(bookings);
-    });
+    res.status(200).json(bookings);
+  });
 });
 
 //query booking by month of one vendor
 bookingRoutes.route("/vendor/time/:id/:from/:to").get((req, res) => {
-    var vendorId = req.params.id;
-    var extractedId = req.id;
-    var fromTime = req.params.from;
-    var toTime = req.params.to;
+  var vendorId = req.params.id;
+  var extractedId = req.id;
+  var fromTime = req.params.from;
+  var toTime = req.params.to;
 
-    if (extractedId != vendorId) {
-        res.status(401).send("Unauthorized user");
+  if (extractedId != vendorId) {
+    res.status(401).send("Unauthorized user");
+    return;
+  }
+
+  Booking.find({ vendorId: vendorId, time: { $gte: fromTime, $lte: toTime } })
+    .sort({ time: 1 })
+    .exec((err, bookings) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send("Could not load document!");
         return;
-    }
-    
-    Booking.find({vendorId: vendorId, time: {$gte: fromTime, $lte: toTime}})
-        .sort({time: 1})
-        .exec((err, bookings) => {
-            if(err){
-                console.log(err)
-                res.status(400).send("Could not load document!");
-                return;
-            }
-            res.status(200).json(bookings);
-        })
+      }
+      res.status(200).json(bookings);
+    });
 });
 
 //query booking of one pet
 bookingRoutes.route("/pet/:id").get((req, res) => {
-    Booking.find({ petId: req.params.id }, (err, bookings) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(bookings);
+  Booking.find({ petId: req.params.id })
+    .sort({ time: -1 })
+    .exec((err, bookings) => {
+      if (err) {
+        console.log(err);
+        res.status(400).send("An error occurs!");
+      }
+      res.status(200).json(bookings);
     });
 });
 
 //get boooking by id
 bookingRoutes.route("/:id").get((req, res) => {
-    var id = req.params.id;
-    var extractedId = req.id;
+  var id = req.params.id;
+  var extractedId = req.id;
 
-    Booking.findById(id, (err, booking) => {
-        if (err) {
-            console.log(err);
-            res.status(400).send("An error occurs!");
-        }
-        res.status(200).json(booking);
-    });
+  Booking.findById(id, (err, booking) => {
+    if (err) {
+      console.log(err);
+      res.status(400).send("An error occurs!");
+    }
+    res.status(200).json(booking);
+  });
 });
 
 //update booking (cancel/complete booking)
@@ -224,7 +228,7 @@ bookingRoutes.route("/:id").put((req, res) => {
 
       booking
         .save()
-        .then(item => {
+        .then((item) => {
           var notification = new Notification();
           notification.time = req.body.time;
           notification.petId = req.body.petId;
@@ -234,12 +238,12 @@ bookingRoutes.route("/:id").put((req, res) => {
           notification.bookingStatus = req.body.status;
           notification
             .save()
-            .then(notif => {
+            .then((notif) => {
               console.log(1);
               Pet.findById(req.body.petId, (err, pet) => {
-                if (!err) {
+                if (!err && pet) {
                   Customer.findById(req.body.customerId, (err, customer) => {
-                    if (!err) {
+                    if (!err && customer) {
                       console.log(2);
                       let time = new Date(req.body.time);
                       month = time.getMonth() + 1;
@@ -272,7 +276,7 @@ bookingRoutes.route("/:id").put((req, res) => {
                       ServiceNotification.findOne(
                         { userId: customer._id },
                         (err, serNotifCustomer) => {
-                          if (!err) {
+                          if (!err && serNotifCustomer) {
                             console.log(3);
                             console.log(serNotifCustomer.deviceId);
                             for (let deviceId of serNotifCustomer.deviceId) {
@@ -282,7 +286,7 @@ bookingRoutes.route("/:id").put((req, res) => {
                             ServiceNotification.findOne(
                               { userId: req.body.vendorId },
                               (err, serNotifVendor) => {
-                                if (!err) {
+                                if (!err && serNotifVendor) {
                                   console.log(4);
                                   console.log(req.body.vendorId);
                                   console.log(serNotifVendor);
@@ -307,12 +311,12 @@ bookingRoutes.route("/:id").put((req, res) => {
               });
             })
 
-            .catch(err => {
+            .catch((err) => {
               console.log(err);
               res.status(400).send("Unable to save to database");
             });
         })
-        .catch(err => {
+        .catch((err) => {
           console.log(err);
           res.status(400).send("unable to update the database");
         });
@@ -322,24 +326,24 @@ bookingRoutes.route("/:id").put((req, res) => {
 
 //remove booking
 bookingRoutes.route("/:id").delete((req, res) => {
-    var id = req.params.id;
-    var extractedId = req.id;
+  var id = req.params.id;
+  var extractedId = req.id;
 
-    Booking.findById(id, (err, booking) => {
-        if (err) res.status(400).json("An error occurs!");
-        else {
-            if (
-                extractedId != req.body.vendorId &&
-                extractedId != req.body.customerId
-            ) {
-                res.status(401).send("Unauthorized user");
-                return;
-            }
-            booking.remove().then(v => {
-                res.status(200).json("Delete succesfully!");
-            });
-        }
-    });
+  Booking.findById(id, (err, booking) => {
+    if (err) res.status(400).json("An error occurs!");
+    else {
+      if (
+        extractedId != req.body.vendorId &&
+        extractedId != req.body.customerId
+      ) {
+        res.status(401).send("Unauthorized user");
+        return;
+      }
+      booking.remove().then((v) => {
+        res.status(200).json("Delete succesfully!");
+      });
+    }
+  });
 });
 
 module.exports = bookingRoutes;

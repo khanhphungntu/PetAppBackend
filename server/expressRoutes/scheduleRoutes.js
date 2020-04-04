@@ -53,11 +53,11 @@ scheduleRoutes.route("/add").post(function(req, res) {
                     .then(notif => {
                       console.log(1);
                       Pet.findById(notif.petId, (err, pet) => {
-                        if (!err) {
+                        if (!err && pet) {
                           Customer.findById(
                             notif.customerId,
                             (err, customer) => {
-                              if (!err) {
+                              if (!err && customer) {
                                 console.log(2);
                                 let time = new Date(notif.time);
                                 month = time.getMonth() + 1;
@@ -88,7 +88,7 @@ scheduleRoutes.route("/add").post(function(req, res) {
                                 ServiceNotification.findOne(
                                   { userId: customer._id },
                                   (err, serNotifCustomer) => {
-                                    if (!err) {
+                                    if (!err && serNotifCustomer) {
                                       console.log(3);
                                       console.log(serNotifCustomer.deviceId);
                                       for (let deviceId of serNotifCustomer.deviceId) {
@@ -101,7 +101,7 @@ scheduleRoutes.route("/add").post(function(req, res) {
                                       ServiceNotification.findOne(
                                         { userId: notif.vendorId },
                                         (err, serNotifVendor) => {
-                                          if (!err) {
+                                          if (!err && serNotifVendor) {
                                             console.log(4);
                                             console.log(notif.vendorId);
                                             console.log(serNotifVendor);
