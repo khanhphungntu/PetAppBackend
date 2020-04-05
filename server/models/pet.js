@@ -9,7 +9,8 @@ var pet = new Schema({
   dateOfBirth: { type : Date, default: Date.now},
   weight: Number,
   height: Number,
-  type: String,
+  species: String,
+  breed: String,
   customerId: String,
   deletedAt: {type : Date, default: null},
 
