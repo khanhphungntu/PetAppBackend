@@ -176,16 +176,20 @@ bookingRoutes.route("/vendor/time/:id/:from/:to").get((req, res) => {
 });
 
 //query booking of one pet
-bookingRoutes.route("/pet/:id").get((req, res) => {
-  Booking.find({ petId: req.params.id })
-    .sort({ createdAt: -1 })
+bookingRoutes.route("/pet/:id/:fromTime").get((req, res) => {
+    var date = req.params.fromTime || Date.now();
+
+    Booking.find({petId: req.params.id, time: {$lt: date}})
+    .sort({ time: -1 })
+    .limit(10)
     .exec((err, bookings) => {
-      if (err) {
-        console.log(err);
-        res.status(400).send("An error occurs!");
-      }
-      res.status(200).json(bookings);
-    });
+        if(err){
+            console.log(err)
+            res.status(400).send("Could not load document!");
+            return;
+        }
+        res.status(200).json(bookings);
+    })
 });
 
 //get boooking by id
