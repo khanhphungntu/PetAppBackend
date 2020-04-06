@@ -70,16 +70,24 @@ vendorRoutes.route('/password/:id').put((req, res) => {
             return;
         }
         else {
-            authSevice.hashPassword(req.body.password, (hashedPassword) => {
-                vendor["password"] = hashedPassword;
-                vendor.save()
-                    .then(vendor => {
-                        res.status(200).json("ok");
+            var oldPwd = req.body.oldPwd;
+            authSevice.comparePassword(oldPwd, vendor.password, (isMatch) => {
+                if(isMatch){
+                    authSevice.hashPassword(req.body.password, (hashedPassword) => {
+                        vendor["password"] = hashedPassword;
+                        vendor.save()
+                            .then(vendor => {
+                                res.status(200).json("ok");
+                            })
+                            .catch(err => {
+                                console.log(err);
+                                res.status(400).send("unable to update the database");
+                            });
                     })
-                    .catch(err => {
-                        console.log(err);
-                        res.status(400).send("unable to update the database");
-                    });
+                }
+                else{
+                    res.status(400).send("Incorrect password!")
+                }
             })
         }
     })

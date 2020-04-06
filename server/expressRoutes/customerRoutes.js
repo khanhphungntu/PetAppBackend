@@ -72,16 +72,24 @@ customerRoutes.route('/password/:id').put((req, res) => {
             return
         } 
         else {
-            authSevice.hashPassword(req.body.password, (hashedPassword) => {
-                customer["password"] = hashedPassword;
-                customer.save()
-                .then(customer => {
-                    res.status(200).json("ok");
-                })
-                .catch(err => {
-                    console.log(err);
-                    res.status(400).send("unable to update the database");
-                });
+            var oldPwd = req.body.oldPwd;
+            authSevice.comparePassword(oldPwd, customer.password, (isMatch) => {
+                if(isMatch){
+                    authSevice.hashPassword(req.body.password, (hashedPassword) => {
+                        customer["password"] = hashedPassword;
+                        customer.save()
+                        .then(customer => {
+                            res.status(200).json("ok");
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            res.status(400).send("unable to update the database");
+                        });
+                    })
+                }
+                else{
+                    res.status(400).send("Incorrect password!")
+                }
             })
         }
     })
