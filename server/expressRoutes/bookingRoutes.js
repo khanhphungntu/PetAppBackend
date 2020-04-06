@@ -122,7 +122,7 @@ bookingRoutes.route("/customer/:id").get((req, res) => {
   }
 
   Booking.find({ customerId: req.params.id })
-  .sort({time:-1})
+  .sort({createdAt:-1})
   .exec( (err, bookings) => {
     if (err) {
       console.log(err);
