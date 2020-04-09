@@ -1,6 +1,8 @@
 const bcrypt = require('bcrypt');
 var authService = {};
-
+/**
+ * authorize password
+ */
 authService.comparePassword = (candidatePassword, password, next) => {   
     bcrypt.compare(candidatePassword, password, (err, isMatch) => {
         if(err) return next(err);
