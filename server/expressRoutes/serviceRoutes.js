@@ -26,26 +26,26 @@ serviceRoutes.route("").post((req, res) => {
 });
 
 // delete service from database
-serviceRoutes.route("/:id").delete((req, res) => {
-  var extractedId = req.id;
+// serviceRoutes.route("/:id").delete((req, res) => {
+//   var extractedId = req.id;
 
-  Service.findById({ _id: req.params.id }, function (err, service) {
-    if (err) res.status(400).send("Could not load document");
-    else {
-      if (service.vendorId !== extractedId) {
-        res.status(401).send("Unauthorized user");
-      } else {
-        Service.findOneAndDelete({ _id: req.params.id })
-          .then((item) => {
-            res.status(200).send("Deleted Successfully");
-          })
-          .catch((err) => {
-            res.status(400).send(err);
-          });
-      }
-    }
-  });
-});
+//   Service.findById({ _id: req.params.id }, function (err, service) {
+//     if (err) res.status(400).send("Could not load document");
+//     else {
+//       if (service.vendorId !== extractedId) {
+//         res.status(401).send("Unauthorized user");
+//       } else {
+//         Service.findOneAndDelete({ _id: req.params.id })
+//           .then((item) => {
+//             res.status(200).send("Deleted Successfully");
+//           })
+//           .catch((err) => {
+//             res.status(400).send(err);
+//           });
+//       }
+//     }
+//   });
+// });
 
 //update service
 serviceRoutes.route("/:id").put((req, res) => {
