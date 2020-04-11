@@ -17,7 +17,7 @@ const scheduleRoutes = require('./server/expressRoutes/scheduleRoutes');
 const notificationRoutes = require('./server/expressRoutes/notificationRoutes');
 const vendorLocationRoutes = require('./server/expressRoutes/vendorLocationRoutes');
 const bookingRoutes = require('./server/expressRoutes/bookingRoutes');
-const serviceNotificationRoutes = require('./server/notification/serviceNotificationRoutes');
+const serviceNotificationRoutes = require('./server/expressRoutes/serviceNotificationRoutes');
 //connect app to mongoDB
 mongoose.Promise = global.Promise;
 mongoose.connect('mongodb+srv://khanhphung:helloworld@cluster0-mymse.mongodb.net/test?authSource=admin&replicaSet=Cluster0-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true').then(
@@ -46,8 +46,11 @@ app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
 app.use('/api/serviceNotification', withAuth, serviceNotificationRoutes);
 
-const noti = require('./server/services/notification');
+const noti = require('./server/services/expoPush');
 const port = process.env.PORT || 4000;
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
+
+
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
     //noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])

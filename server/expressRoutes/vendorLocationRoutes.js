@@ -26,7 +26,11 @@ vendorLocationRoutes.route("").get((req, res) => {
 
 //get vendor Location by name
 vendorLocationRoutes.route("/:name").get((req, res) => {
-  VendorLocation.find({ name: req.params.name }, (err, data) => {
+  VendorLocation.findOne({ name: req.params.name }, (err, data) => {
+    if (err || !data){
+      res.status(400).send("Could not load documents");
+      return;
+    }
     res.status(200).json(data);
   });
 });
@@ -34,7 +38,7 @@ vendorLocationRoutes.route("/:name").get((req, res) => {
 //get vendor Location by Id
 vendorLocationRoutes.route("/vendor/:id").get((req, res) => {
   VendorLocation.findOne({ vendorId: req.params.id }, (err, data) => {
-    if (!err) res.status(200).json(data);
+    if (!err && data) res.status(200).json(data);
     else res.status(400).json("Error when finding vendor Location by Id");
   });
 });
