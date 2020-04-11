@@ -35,11 +35,11 @@ vendorLocationRoutes.route("/:name").get((req, res) => {
   });
 });
 
-//get vendor Location by Id
+//get vendor Location by vendor Id
 vendorLocationRoutes.route("/vendor/:id").get((req, res) => {
   VendorLocation.findOne({ vendorId: req.params.id }, (err, data) => {
     if (!err && data) res.status(200).json(data);
-    else res.status(400).json("Error when finding vendor Location by Id");
+    else res.status(400).json("Error when finding vendor Location by vendorId");
   });
 });
 

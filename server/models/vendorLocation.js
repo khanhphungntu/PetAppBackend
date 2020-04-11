@@ -13,6 +13,8 @@ var vendorLocation = new Schema(
     tel_office_2: Number,
     fax_office: String,
     vendorId: String,
+    longitude: Number,
+    latitude:Number
     },{
   collection: 'vendorLocation'
 });
