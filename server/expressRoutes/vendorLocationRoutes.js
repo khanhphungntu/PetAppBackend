@@ -2,7 +2,9 @@ var express = require("express");
 var vendorLocationRoutes = express.Router();
 var VendorLocation = require("../models/vendorLocation");
 
-//get all Vendor Locations
+/**
+ * Get all the vendor location
+ */
 vendorLocationRoutes.route("").get((req, res) => {
   VendorLocation.find()
     .sort({ name: 1 })
@@ -24,7 +26,9 @@ vendorLocationRoutes.route("").get((req, res) => {
 
 });
 
-//get vendor Location by name
+/**
+ * Get a vendorLocation by its name
+ */
 vendorLocationRoutes.route("/:name").get((req, res) => {
   VendorLocation.findOne({ name: req.params.name }, (err, data) => {
     if (err || !data){
@@ -35,7 +39,9 @@ vendorLocationRoutes.route("/:name").get((req, res) => {
   });
 });
 
-//get vendor Location by vendor Id
+/**
+ * Get a vendorLocation by the vendorId attribute of this location
+ */
 vendorLocationRoutes.route("/vendor/:id").get((req, res) => {
   VendorLocation.findOne({ vendorId: req.params.id }, (err, data) => {
     if (!err && data) res.status(200).json(data);

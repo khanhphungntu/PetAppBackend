@@ -46,12 +46,9 @@ app.use('/api/vendorLocation', vendorLocationRoutes);
 app.use('/api/booking',withAuth,bookingRoutes);
 app.use('/api/serviceNotification', withAuth, serviceNotificationRoutes);
 
-const noti = require('./server/services/expoPush');
 const port = process.env.PORT || 4000;
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-
 const server = app.listen(port, function(){
     console.log('Listening on port ' + port);
-    //noti.send(['ExponentPushToken[Gd-Nv1CRLJpTbnkVjoY6Ds]'])
 });

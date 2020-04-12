@@ -3,7 +3,9 @@ var vendorRoutes = express.Router();
 var Vendor = require('../models/vendor');
 var authSevice = require('../services/auth');
 
-// get vendor by id
+/**
+ * Get a vendor by their id
+ */
 vendorRoutes.route('/:id').get((req, res) => {
     var id = req.params.id;
     Vendor.findById(id, (err, vendor) => {
@@ -16,7 +18,9 @@ vendorRoutes.route('/:id').get((req, res) => {
     });
 })
 
-// update vendor by id
+/**
+ * Update a vendor information given the vendor's id
+ */
 vendorRoutes.route('/:id').put((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;
@@ -54,7 +58,9 @@ vendorRoutes.route('/:id').put((req, res) => {
 })
 
 
-//update vendor password
+/**
+ * Update the password of the vendor
+ */
 vendorRoutes.route('/password/:id').put((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;

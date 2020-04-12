@@ -7,7 +7,10 @@ var Pet = require("../models/pet");
 var Customer = require("../models/customer");
 var expoPush = require("../services/expoPush");
 var ServiceNotification = require("../models/serviceNotification");
-//add new booking
+/**
+ * Route to add new booking and send notification to the users 
+ * (both customers and vendors)
+ */
 bookingRoutes.route("/").post((req, res) => {
   var booking = new Booking(req.body);
   var extractedId = req.id;
@@ -54,13 +57,14 @@ bookingRoutes.route("/").post((req, res) => {
             notification
               .save()
               .then(async (notif) => {
+                // Send Push Notification by Expo
                 await expoPush.sendNotif(notif, (status, str) => {
                   res.status(status).send(str);
                 })
 
               })
               .catch((err) => {
-                console.log("1 "+err);
+                // console.log("1 "+err);
                 if (err)
                 res.status(400).send("Unable to save to database");
               });
@@ -80,7 +84,9 @@ bookingRoutes.route("/").post((req, res) => {
     });
 });
 
-//query booking of one customer
+/**
+ * Query bookings of the customer by their Id
+ */
 bookingRoutes.route("/customer/:id").get((req, res) => {
   var customerId = req.params.id;
   var extractedId = req.id;
@@ -100,12 +106,12 @@ bookingRoutes.route("/customer/:id").get((req, res) => {
     });
 });
 
-//query booking of one vendor
+/**
+ * Query bookings of a vendor by their Id
+ */
 bookingRoutes.route("/vendor/:id").get((req, res) => {
   var vendorId = req.params.id;
   var extractedId = req.id;
-  // console.log("Request ")
-  // console.log(req)
 
   if (extractedId != vendorId) {
     res.status(401).send("Unauthorized user");
@@ -118,12 +124,13 @@ bookingRoutes.route("/vendor/:id").get((req, res) => {
       res.status(400).send("An error occurs!");
     }
     res.status(200).json(bookings);
-    // console.log("response ")
-    // console.log(res)
+
   });
 });
 
-//query booking by month of one vendor
+/**
+ * Query bookings in a time period (e.g 1 month) by a vendor
+ */
 bookingRoutes.route("/vendor/time/:id/:from/:to").get((req, res) => {
   var vendorId = req.params.id;
   var extractedId = req.id;
@@ -147,7 +154,9 @@ bookingRoutes.route("/vendor/time/:id/:from/:to").get((req, res) => {
     });
 });
 
-//query booking of one pet
+/**
+ * Query bookings of a pet from a time point
+ */
 bookingRoutes.route("/pet/:id/:fromTime").get((req, res) => {
   var date = req.params.fromTime || Date.now();
 
@@ -164,7 +173,9 @@ bookingRoutes.route("/pet/:id/:fromTime").get((req, res) => {
     });
 });
 
-//get boooking by id
+/**
+ * Query a booking based on booking Id 
+ */
 bookingRoutes.route("/:id").get((req, res) => {
   var id = req.params.id;
   var extractedId = req.id;
@@ -185,8 +196,10 @@ bookingRoutes.route("/:id").get((req, res) => {
   });
 });
 
-//update booking (cancel/complete booking)
-//must enter status to set status
+/**
+ * Update booking (cancel/complete booking)
+ * must enter status to set status
+ */
 bookingRoutes.route("/:id").put((req, res) => {
   var id = req.params.id;
   var extractedId = req.id;
@@ -247,7 +260,9 @@ bookingRoutes.route("/:id").put((req, res) => {
   });
 });
 
-//remove booking
+/**
+ * Remove a booking by its id
+ */
 bookingRoutes.route("/:id").delete((req, res) => {
   var id = req.params.id;
   var extractedId = req.id;

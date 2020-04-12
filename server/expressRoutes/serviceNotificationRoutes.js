@@ -2,6 +2,10 @@ var express = require('express');
 var serviceNotificationRoutes = express.Router();
 var ServiceNotification = require('../models/serviceNotification');
 
+/**
+ * Add a deviceId to the deviceId list of
+ * a user (this list is used for push notification)
+ */
 serviceNotificationRoutes.route('/').post((req, res) => {
 
     var userId = req.id;

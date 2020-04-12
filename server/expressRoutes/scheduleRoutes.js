@@ -7,7 +7,10 @@ var Pet = require("../models/pet");
 var Customer = require("../models/customer");
 var expoPush = require("../services/expoPush");
 var ServiceNotification = require("../models/serviceNotification");
-//add unavailableDates
+
+/**
+ * Add unavailable dates
+ */
 scheduleRoutes.route("/add").post(function (req, res) {
   req.body.date = new Date(req.body.date);
   if (req.body.vendorId != req.id) {
@@ -24,7 +27,6 @@ scheduleRoutes.route("/add").post(function (req, res) {
       } else {
         if (result == false) {
           //same vendor same date
-          //res.json("Date is already blocked!");
           //cancel booking when date is blocked
           schedule
             .save()
@@ -96,7 +98,9 @@ scheduleRoutes.route("/add").post(function (req, res) {
   );
 });
 
-//get unavailable dates by vendorID
+/**
+ * Get all unavailable dates by vendorID
+ */
 scheduleRoutes.route("/vendor/:id").get(function (req, res) {
   var id = req.params.id;
 
@@ -106,7 +110,9 @@ scheduleRoutes.route("/vendor/:id").get(function (req, res) {
   });
 });
 
-//get unavailable dates by id
+/**
+ * Get an unavailable date by id
+ */
 scheduleRoutes.route("/:id").get(function (req, res) {
   var id = req.params.id;
 
@@ -116,7 +122,9 @@ scheduleRoutes.route("/:id").get(function (req, res) {
   });
 });
 
-//delete by date
+/**
+ * Delete an unavailable date of a vendor given the date
+ */
 scheduleRoutes.route("/date").delete(function (req, res) {
   var date = new Date(req.body.date);
   var vendorId = req.body.vendorId;
@@ -135,7 +143,9 @@ scheduleRoutes.route("/date").delete(function (req, res) {
   });
 });
 
-//delete by id
+/**
+ * Delete an unavailble date of a vendor given its id
+ */
 scheduleRoutes.route("/:id").delete(function (req, res) {
   var id = req.params.id;
   var vendorId = req.body.vendorId;

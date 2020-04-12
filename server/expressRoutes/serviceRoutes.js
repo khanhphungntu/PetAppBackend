@@ -3,7 +3,9 @@ var serviceRoutes = express.Router();
 var Service = require("../models/service");
 var Vendor = require("../models/vendor");
 
-// add new service
+/**
+ * Add a new service
+ */
 serviceRoutes.route("").post((req, res) => {
   var extractedId = req.id;
   var service = new Service(req.body);
@@ -47,7 +49,9 @@ serviceRoutes.route("").post((req, res) => {
 //   });
 // });
 
-//update service
+/**
+ * Update the service by its Id
+ */
 serviceRoutes.route("/:id").put((req, res) => {
   var id = req.params.id;
   var extractedId = req.id;
@@ -77,8 +81,9 @@ serviceRoutes.route("/:id").put((req, res) => {
   });
 });
 
-//get service
-
+/**
+ * Get the service by its Id
+ */
 serviceRoutes.route("/:id").get((req, res) => {
   var id = req.params.id;
 
@@ -90,7 +95,9 @@ serviceRoutes.route("/:id").get((req, res) => {
   });
 });
 
-// get all services by a vendor
+/**
+ * Get all the services of the vendorId
+ */
 serviceRoutes.route("/vendor/:vendorId").get((req, res) => {
   var id = req.params.vendorId;
 

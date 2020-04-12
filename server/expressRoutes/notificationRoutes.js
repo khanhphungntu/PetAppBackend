@@ -3,7 +3,9 @@ var notificationRoutes = express.Router();
 var Notification = require("../models/notification");
 const app = express();
 
-// add new notification
+/**
+ * Add new notification
+ */
 notificationRoutes.route("/add").post(function (req, res) {
   var notification = new Notification(req.body);
 
@@ -17,7 +19,9 @@ notificationRoutes.route("/add").post(function (req, res) {
     });
 });
 
-// delete notification from database
+/**
+ * Delete notification from database based on its Id
+ */
 notificationRoutes.route("/:id").delete(function (req, res) {
   Notification.findByIdAndRemove({ _id: req.params.id }, function (
     err,
@@ -28,7 +32,10 @@ notificationRoutes.route("/:id").delete(function (req, res) {
   });
 });
 
-//read notification of one customer
+/**
+ * Read notifications of a customer (limited to 10)
+ * from a specified time (the latest notifications are at the top)
+ */
 notificationRoutes.route("/customer/:id/:fromTime").get(function (req, res) {
   var customerId = req.params.id;
   var extractedId = req.id;
@@ -53,7 +60,10 @@ notificationRoutes.route("/customer/:id/:fromTime").get(function (req, res) {
     });
 });
 
-//read notification of one vendor
+/**
+ * Read notifications of a vendor (limited to 10)
+ * from a specified time (the latest notifications are at the top)
+ */
 notificationRoutes.route("/vendor/:id/:fromTime").get(function (req, res) {
   var vendorId = req.params.id;
   var extractedId = req.id;
@@ -78,17 +88,19 @@ notificationRoutes.route("/vendor/:id/:fromTime").get(function (req, res) {
     });
 });
 
-//read notification of one pet
-//will think about the security here
+/**
+ * Read notifications of a pet (limited to 10)
+ * from a specified time (the latest notifications are at the top)
+ */
 notificationRoutes.route("/pet/:id/:fromTime").get(function (req, res) {
   var petId = req.params.id;
   var extractedId = req.id;
   var date = req.params.fromTime || Date.now();
 
-  //   if (extractedId != petId) {
-  //     res.status(401).send("Unauthorized user");
-  //     return;
-  //   }
+    if (extractedId != petId) {
+      res.status(401).send("Unauthorized user");
+      return;
+    }
 
   Notification.find({ petId: petId, createdAt: { $lt: date } })
     .sort({ createdAt: -1 })
@@ -102,7 +114,10 @@ notificationRoutes.route("/pet/:id/:fromTime").get(function (req, res) {
       res.status(200).json(notification);
     });
 });
-//read notification by id
+
+/**
+ * Read a notification by its Id
+ */
 notificationRoutes.route("/:id").get(function (req, res) {
   Notification.findById({ _id: req.params.id }, function (err, notification) {
     if (err) res.status(400).json(err);

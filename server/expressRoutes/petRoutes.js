@@ -2,7 +2,9 @@ var express = require("express");
 var petRoutes = express.Router();
 var Pet = require("../models/pet");
 
-// add new pet
+/**
+ * Add a new pet
+ */
 petRoutes.route("/add").post(function (req, res) {
   var pet = new Pet(req.body, (deletedAt = null));
   var extractedId = req.id;
@@ -20,7 +22,9 @@ petRoutes.route("/add").post(function (req, res) {
     });
 });
 
-// delete pet from database (soft delete)
+/**
+ * Delete pet from database (soft delete)
+ */
 petRoutes.route("/:id").delete((req, res) => {
   var id = req.params.id;
   var extractedId = req.id;
@@ -51,7 +55,9 @@ petRoutes.route("/:id").delete((req, res) => {
   });
 });
 
-//read pet
+/**
+ * Read a pet given its id
+ */
 petRoutes.route("/:id").get(function (req, res) {
   var id = req.params.id;
   Pet.findById(id, (err, pet) => {
@@ -67,7 +73,9 @@ petRoutes.route("/:id").get(function (req, res) {
   });
 });
 
-//get pet by customerid
+/**
+ * Get all pets by customer Id
+ */
 petRoutes.route("/customer/:id").get(function (req, res) {
   var id = req.params.id;
   var petList = [];
@@ -91,7 +99,9 @@ petRoutes.route("/customer/:id").get(function (req, res) {
   });
 });
 
-//update pet
+/**
+ * Update a pet by their Id
+ */
 petRoutes.route("/:id").put(function (req, res) {
   var id = req.params.id;
   var extractedId = req.id;

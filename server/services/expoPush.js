@@ -11,6 +11,11 @@ admin.initializeApp({
 });
 
 var expoPush = {};
+/** 
+ * Function to send a notifcation (string) to devices
+ * @param {array} somePushTokens - this is the list of push token (deviceId)
+ * @param {string} notif - this is the notification to be sent
+ */
 expoSend = async (somePushTokens, notif) => {
   let expo = new Expo();
   let messages = [];
@@ -48,6 +53,12 @@ expoSend = async (somePushTokens, notif) => {
     }
   }
 };
+
+/**
+ * Function to send a notification to the devices of customer and vendor
+ * @param {Object} notif - this is the notification created
+ * @param {next} next - this is the callback function to catch the result
+ */
 expoPush.sendNotif = (notif, next) => {
   // console.log(1);
   Pet.findById(notif.petId, async (err, pet) => {
@@ -103,9 +114,7 @@ expoPush.sendNotif = (notif, next) => {
                   status = 400;
                   log = "Cannot find the deviceIds of the customer";
                 } else {
-                  // console.log(serNotifCustomer.deviceId);
                   for (let deviceId of serNotifCustomer.deviceId) {
-                    // console.log(deviceId);
                     listSend.push(expoSend([deviceId], notifCustomer));
                   }
                 }
@@ -123,8 +132,6 @@ expoPush.sendNotif = (notif, next) => {
                   error = true;
                 } else {
                   // console.log(4);
-                  // console.log(notif.vendorId);
-                  // console.log(serNotifVendor);
                   for (let deviceId of serNotifVendor.deviceId) {
                     // console.log(deviceId);
                     listSend.push(expoSend([deviceId], notifVendor));
@@ -132,9 +139,7 @@ expoPush.sendNotif = (notif, next) => {
                 }
               }
             );
-            // console.log("aaaaa");
-            // console.log("listSend \n"+listSend)
-            // for (v of listSend) console.log(v);
+
 
             await Promise.all(listSend);
             console.log(status, log);

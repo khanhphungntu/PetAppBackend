@@ -3,7 +3,9 @@ var customerRoutes = express.Router();
 var Customer = require('../models/customer');
 var authSevice = require('../services/auth');
 
-// get customer by id
+/**
+ * Get customer by their Id
+ */
 customerRoutes.route('/:id').get((req, res) => {
     var id = req.params.id;
     Customer.findById(id,  (err, customer) => {
@@ -15,7 +17,9 @@ customerRoutes.route('/:id').get((req, res) => {
     });
 })
 
-//update customer profile except password
+/**
+ * update customer profile except password
+ */
 customerRoutes.route('/:id').put((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;
@@ -54,7 +58,9 @@ customerRoutes.route('/:id').put((req, res) => {
 })
 
 
-//update customer password
+/**
+ * Update customer password
+ */
 customerRoutes.route('/password/:id').put((req, res) => {
     var id = req.params.id;
     var extractedId = req.id;
