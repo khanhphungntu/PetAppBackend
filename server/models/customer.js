@@ -9,7 +9,6 @@ var customer = new Schema({
   password: String,
   createdAt: { type : Date, default: Date.now },
   updatedAt: { type : Date },
-  rememberToken:String,
   mobile: String,
   firstName: String,
   lastName: String,

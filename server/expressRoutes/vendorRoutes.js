@@ -10,6 +10,7 @@ vendorRoutes.route('/:id').get((req, res) => {
         if (err) {
             console.log(err);
             res.status(400).send("An error occurs!");
+            return;
         }
         res.status(200).json(vendor);
     });
@@ -66,7 +67,7 @@ vendorRoutes.route('/password/:id').put((req, res) => {
     Vendor.findById(id, (err, vendor) => {
 
         if (!vendor || err) {
-            res.json('Could not load Document');
+            res.status(400).json('Could not load Document');
             return;
         }
         else {

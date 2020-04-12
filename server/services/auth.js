@@ -5,7 +5,8 @@ var authService = {};
  */
 authService.comparePassword = (candidatePassword, password, next) => {   
     bcrypt.compare(candidatePassword, password, (err, isMatch) => {
-        if(err) return next(err);
+        if(err)
+         return next(err);
         next(isMatch);
     })
 }

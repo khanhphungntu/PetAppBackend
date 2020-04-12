@@ -84,7 +84,7 @@ accountRoutes.route("/vendor").post((req, res) => {
         res.status(400).send("error when finding the vendor");
       });
     }
-  })
+  });
 });
 
 module.exports = accountRoutes;
