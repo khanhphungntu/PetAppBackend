@@ -10,9 +10,12 @@ var Customer = require('../models/customer');
 var Vendor = require('../models/vendor');
 var authRoutes = express.Router();
 const nodemailer = require('nodemailer');
+
+
+
 authRoutes.route('/login/customer').post(async (req, res) => {
     const { email, password } = req.body;
-
+    
     Customer.find({email: email}, (err, customers) =>{
         if(err) throw(err);
         if(customers.length == 0){
@@ -63,7 +66,9 @@ authRoutes.route('/login/vendor').post(async (req, res) => {
                         id: vendor._id,
                     }
                     
-                    const token = jwt.sign(payload, secret.key);
+                    const token = jwt.sign(payload, secret.key,{
+                        expiresIn:'24h'
+                    });
 
                     res.status(200).json({
                         token: token,
@@ -93,11 +98,12 @@ authRoutes.route('/password/vendor').post(async (req, res) => {
         else{
             var vendor = new Vendor(vendors[0]);
             var newPwd = crypto.randomBytes(10).toString('hex');
+            console.log(newPwd);
             authSevice.hashPassword(newPwd, (hashedPasword) => {
                 vendor.password = hashedPasword;
                 vendor.save()
                 .then(item => {
-                    res.status(200).send("Account is created successfully!");
+                    res.status(200).send("Password is reset successfully");
                 })
                 .catch(err => {
                     console.log(err);
@@ -105,24 +111,24 @@ authRoutes.route('/password/vendor').post(async (req, res) => {
                 })
             })
             var transporter = nodemailer.createTransport({
+
                 service: 'gmail',
                 auth: {
                        user: 'cz2006ntu@gmail.com',
                        pass: 'helloworld123'
                    }
                });
-
             const mailOptions = {
                 from: 'cz2006ntu@gmail.com', // sender address
                 to: vendor.email, // list of receivers
                 subject: 'Password recovery for Pet App', // Subject line
-                html: '<p>Your new password is: ' + newPwd // plain text body
+                html: '<p>Your new password is: ' + newPwd+'</p>' // plain text body
             };
-
             transporter.sendMail(mailOptions, (err, info) => {
                 if(err)
                   console.log(err)
              });
+
         }
     })
     .catch(err => {
@@ -147,7 +153,7 @@ authRoutes.route('/password/customer').post(async (req, res) => {
 
                 customer.save()
                 .then(item => {
-                    res.status(200).send("Account is created successfully!");
+                    res.status(200).send("Password is reset successfully");
                 })
                 .catch(err => {
                     console.log(err);
@@ -167,7 +173,7 @@ authRoutes.route('/password/customer').post(async (req, res) => {
                 from: 'cz2006ntu@gmail.com', // sender address
                 to: customer.email, // list of receivers
                 subject: 'Password recovery for Pet App', // Subject line
-                html: '<p>Your new password is: ' + newPwd // plain text body
+                html: '<p>Your new password is: ' + newPwd+'</p>' // plain text body
             };
 
             transporter.sendMail(mailOptions, (err, info) => {
