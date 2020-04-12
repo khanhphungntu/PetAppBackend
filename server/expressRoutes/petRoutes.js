@@ -54,16 +54,11 @@ petRoutes.route("/:id").delete((req, res) => {
 //read pet
 petRoutes.route("/:id").get(function (req, res) {
   var id = req.params.id;
-  var extractedId = req.id;
   Pet.findById(id, (err, pet) => {
     if (!pet || err) {
       res.status(400).json("Pet not found or " + err);
       return;
     } else {
-      if (pet.customerId != extractedId) {
-        res.status(401).json("Unauthorized");
-        return;
-      }
       if (pet.deletedAt != null) {
         res.status(400).json("Pet is already deleted!");
         return;
