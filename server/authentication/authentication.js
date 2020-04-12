@@ -10,6 +10,10 @@ var Customer = require('../models/customer');
 var Vendor = require('../models/vendor');
 var authRoutes = express.Router();
 const nodemailer = require('nodemailer');
+
+/**
+ * Routes to login using email and password of the customer 
+ */
 authRoutes.route('/login/customer').post(async (req, res) => {
     const { email, password } = req.body;
 
@@ -47,6 +51,9 @@ authRoutes.route('/login/customer').post(async (req, res) => {
     })
 })
 
+/**
+ * Route to login using vendor's name and password
+ */
 authRoutes.route('/login/vendor').post(async (req, res) => {
     const { email, password } = req.body;
 
@@ -82,6 +89,9 @@ authRoutes.route('/login/vendor').post(async (req, res) => {
     })
 })
 
+/**
+ * Route to renew password when the vendor forgot it
+ */
 authRoutes.route('/password/vendor').post(async (req, res) => {
     const { email } = req.body;
 
@@ -131,6 +141,9 @@ authRoutes.route('/password/vendor').post(async (req, res) => {
     })
 })
 
+/**
+ * Route to renew password when customer forgot it
+ */
 authRoutes.route('/password/customer').post(async (req, res) => {
     const { email } = req.body;
 
@@ -167,7 +180,7 @@ authRoutes.route('/password/customer').post(async (req, res) => {
                 from: 'cz2006ntu@gmail.com', // sender address
                 to: customer.email, // list of receivers
                 subject: 'Password recovery for Pet App', // Subject line
-                html: '<p>Your new password is: ' + newPwd // plain text body
+                html: '<p>Your new password is: ' + newPwd+'</p>' // plain text body
             };
 
             transporter.sendMail(mailOptions, (err, info) => {
