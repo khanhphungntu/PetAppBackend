@@ -97,8 +97,8 @@ expoPush.sendNotif = (notif, next) => {
               { userId: customer._id },
               (err, serNotifCustomer) => {
                 if (err) {
-                  (status = 400),
-                    (log = "error while finding the deviceIds of the customer");
+                  status = 400;
+                  log = "error while finding the deviceIds of the customer";
                 } else if (!serNotifCustomer) {
                   status = 400;
                   log = "Cannot find the deviceIds of the customer";
